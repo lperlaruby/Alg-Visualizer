@@ -27,47 +27,6 @@ export default function SortingVisualizer({
             flexDirection: 'column',
             gap: '20px'
         }}>
-            {/* Status Bar - shows array info */}
-            <div style={{
-                display: 'flex',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                padding: '15px 20px',
-                background: '#fff',
-                borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                border: '1px solid #e9ecef'
-            }}>
-                <div style={{ display: 'flex', gap: '20px' }}>
-                    <span style={{ fontWeight: 'bold', color: '#495057' }}>
-                        Array Size: <span style={{ color: '#007bff' }}>{array.length}</span>
-                    </span>
-                    <span style={{ fontWeight: 'bold', color: '#495057' }}>
-                        Max Value: <span style={{ color: '#007bff' }}>{Math.max(...array)}</span>
-                    </span>
-                </div>
-            </div>
-
-            {/* Description Display - shows what's happening in the current step */}
-            {description && (
-                <div style={{
-                    padding: '15px 20px',
-                    background: '#fff',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                    border: '1px solid #e9ecef',
-                    textAlign: 'center'
-                }}>
-                    <p style={{ 
-                        margin: 0, 
-                        fontSize: '16px', 
-                        color: '#495057',
-                        fontWeight: '500'
-                    }}>
-                        {description}
-                    </p>
-                </div>
-            )}
 
             {/* Visualization Area - this is where the bars are shown */}
             <div style={{
