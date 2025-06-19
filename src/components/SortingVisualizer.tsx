@@ -27,12 +27,12 @@ export default function SortingVisualizer({
             flexDirection: 'column',
             gap: '20px'
         }}>
-            {/* Header Section */}
+            {/* Header Section - this shows what algorithm we're using */}
             <div style={{
                 textAlign: 'center',
                 padding: '20px',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
+                background: 'white',
+                color: 'black',
                 borderRadius: '8px',
                 marginBottom: '20px'
             }}>
@@ -44,7 +44,7 @@ export default function SortingVisualizer({
                 </p>
             </div>
 
-            {/* Status Bar */}
+            {/* Status Bar - shows array info and current status */}
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -66,16 +66,16 @@ export default function SortingVisualizer({
                 <div style={{
                     padding: '8px 16px',
                     borderRadius: '20px',
-                    background: isSorting ? '#ffc107' : '#28a745',
+                    background: isSorting ? '#ffc107' : 'black',
                     color: isSorting ? '#000' : '#fff',
                     fontWeight: 'bold',
                     fontSize: '14px'
                 }}>
-                    {isSorting ? '🔄 Sorting...' : '✅ Ready'}
+                    {isSorting ? '🔄 Sorting...' : 'Ready'}
                 </div>
             </div>
 
-            {/* Description Display */}
+            {/* Description Display - shows what's happening in the current step */}
             {description && (
                 <div style={{
                     padding: '15px 20px',
@@ -96,7 +96,7 @@ export default function SortingVisualizer({
                 </div>
             )}
 
-            {/* Visualization Area */}
+            {/* Visualization Area - this is where the bars are shown */}
             <div style={{
                 flex: 1,
                 display: 'flex',
@@ -110,7 +110,7 @@ export default function SortingVisualizer({
                     sortedIndices={sortedIndices}
                 />
                 
-                {/* Legend */}
+                {/* Legend - explains what the colors mean */}
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -145,7 +145,7 @@ export default function SortingVisualizer({
                             backgroundColor: '#dc3545',
                             borderRadius: '4px'
                         }}></div>
-                        <span style={{ fontSize: '14px', color: '#black' }}>Swapping</span>
+                        <span style={{ fontSize: '14px', color: '#495057' }}>Swapping</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div style={{

@@ -10,7 +10,7 @@ interface SidebarProps {
     isSorting: boolean;
 }
 
-// defining the algorithms im supporting
+// defining the algorithms im supporting - these are the sorting methods we can visualize
 const algorithms = [
     { id: 'bubble', name: 'Bubble Sort', description: 'Simple but slow O(n²)' },
     { id: 'selection', name: 'Selection Sort', description: 'Simple, O(n²)' },
@@ -28,12 +28,12 @@ export default function Sidebar({
     onReset,
     isSorting,
 }: SidebarProps) {
-    // local state for controls
+    // local state for controls - keep track of what user has selected
     const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubble');
     const [arraySize, setArraySize] = useState(20);
     const [speed, setSpeed] = useState(50);
 
-    // handlers for controls
+    // handlers for controls - these update local state and call parent functions
     const handleAlgorithmChange = (algorithmId: string) => {
         setSelectedAlgorithm(algorithmId); //update local state
         onAlgorithmChange(algorithmId); //call parent handler
@@ -51,30 +51,42 @@ export default function Sidebar({
 
     return (
         <aside style={{ 
-            width: 250, 
-            background: "f5f5f5", 
-            padding: 20,
-            borderRight: "1px solid #ddd",
-            height: "100vh",
-            overflowY: "auto",            
+            width: "320px",
+            background: "white", 
+            padding: "24px",
+            borderRadius: "16px",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+            height: "fit-content",
+            maxHeight: "calc(100vh - 120px)",
+            overflowY: "auto",
+            position: "sticky",
+            top: "20px",
+            border: "1px solid rgba(0,0,0,0.05)",
         }}>
 
-        {/* Algorithm Selector Section*/}
-        <div style={{ marginBottom: 24 }}>
-                <h4 style={{ marginBottom: 12, color: "#555" }}>Select Algorithm</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {/* Algorithm Selector Section - user picks which sorting method to use */}
+        <div style={{ 
+            marginBottom: 28,
+            minHeight: "200px",
+            display: "flex",
+            flexDirection: "column"
+        }}>
+                <h4 style={{ marginBottom: 16, color: "#333", fontSize: "16px", fontWeight: "600" }}>Select Algorithm</h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
                     {algorithms.map((algorithm) => (
                         <label 
                             key={algorithm.id}
                             style={{
                                 display: "flex",
                                 alignItems: "center",
-                                padding: "8px 12px",
-                                background: selectedAlgorithm === algorithm.id ? "#e3f2fd" : "#fff",
-                                border: "1px solid #ddd",
-                                borderRadius: 6,
+                                padding: "12px 16px",
+                                background: selectedAlgorithm === algorithm.id ? "#f0f8ff" : "#fafafa",
+                                border: selectedAlgorithm === algorithm.id ? "2px solid #3b82f6" : "1px solid #e5e7eb",
+                                borderRadius: 12,
                                 cursor: isSorting ? "not-allowed" : "pointer",
-                                opacity: isSorting ? 0.6 : 1
+                                opacity: isSorting ? 0.6 : 1,
+                                transition: "all 0.2s ease",
+                                boxShadow: selectedAlgorithm === algorithm.id ? "0 2px 8px rgba(59, 130, 246, 0.15)" : "none"
                             }}
                         >
                             <input
@@ -84,13 +96,13 @@ export default function Sidebar({
                                 checked={selectedAlgorithm === algorithm.id}
                                 onChange={(e) => handleAlgorithmChange(e.target.value)}
                                 disabled={isSorting}
-                                style={{ marginRight: 8 }}
+                                style={{ marginRight: 12 }}
                             />
                             <div>
-                                <div style={{ fontWeight: "bold", fontSize: 14 }}>
+                                <div style={{ fontWeight: "600", fontSize: 14, color: "#1f2937" }}>
                                     {algorithm.name}
                                 </div>
-                                <div style={{ fontSize: 12, color: "#666" }}>
+                                <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>
                                     {algorithm.description}
                                 </div>
                             </div>
@@ -98,33 +110,51 @@ export default function Sidebar({
                     ))}
                 </div>
             </div>
-               {/* Array Size Control Section */}
-               <div style={{ marginBottom: 24 }}>
-                <h4 style={{ marginBottom: 12, color: "#555" }}>Array Size</h4>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+               {/* Array Size Control Section - user can make array bigger or smaller */}
+               <div style={{ 
+                marginBottom: 28,
+                minHeight: "120px",
+                display: "flex",
+                flexDirection: "column"
+            }}>
+                <h4 style={{ marginBottom: 16, color: "#333", fontSize: "16px", fontWeight: "600" }}>Array Size</h4>
+                <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
                     <input
                         type="range"
-                        min="5"
-                        max="100"
+                        min="10"
+                        max="200"
                         value={arraySize}
                         onChange={(e) => handleArraySizeChange(Number(e.target.value))}
                         disabled={isSorting}
-                        style={{ flex: 1 }}
+                        style={{ 
+                            flex: 1,
+                            height: 6,
+                            borderRadius: 3,
+                            background: "#e5e7eb",
+                            outline: "none",
+                            cursor: isSorting ? "not-allowed" : "pointer"
+                        }}
                     />
                     <span style={{ 
-                        minWidth: 30, 
+                        minWidth: 40, 
                         textAlign: "center",
-                        fontWeight: "bold",
-                        color: "#333"
+                        fontWeight: "600",
+                        color: "#1f2937",
+                        fontSize: "14px"
                     }}>
                         {arraySize}
                     </span>
                 </div>
             </div>
-                {/* Animation Speed Control Section */}
-                <div style={{ marginBottom: 24 }}>
-                <h4 style={{ marginBottom: 12, color: "#555" }}>Animation Speed</h4>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                {/* Animation Speed Control Section - user controls how fast the animation plays */}
+                <div style={{ 
+                marginBottom: 28,
+                minHeight: "120px",
+                display: "flex",
+                flexDirection: "column"
+            }}>
+                <h4 style={{ marginBottom: 16, color: "#333", fontSize: "16px", fontWeight: "600" }}>Animation Speed</h4>
+                <div style={{ display: "flex", alignItems: "center", gap: 16, flex: 1 }}>
                     <input
                         type="range"
                         min="1"
@@ -132,34 +162,62 @@ export default function Sidebar({
                         value={speed}
                         onChange={(e) => handleSpeedChange(Number(e.target.value))}
                         disabled={isSorting}
-                        style={{ flex: 1 }}
+                        style={{ 
+                            flex: 1,
+                            height: 6,
+                            borderRadius: 3,
+                            background: "#e5e7eb",
+                            outline: "none",
+                            cursor: isSorting ? "not-allowed" : "pointer"
+                        }}
                     />
                     <span style={{ 
-                        minWidth: 30, 
+                        minWidth: 40, 
                         textAlign: "center",
-                        fontWeight: "bold",
-                        color: "#333"
+                        fontWeight: "600",
+                        color: "#1f2937",
+                        fontSize: "14px"
                     }}>
                         {speed}
                     </span>
                 </div>
             </div>
-            {/* Control Buttons Section*/}
-            <div style={{ marginBottom: 24 }}>
-                <h4 style={{ marginBottom: 12, color: "#555" }}>Controls</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {/* Control Buttons Section - the main action buttons */}
+            <div style={{ 
+                marginBottom: 28,
+                minHeight: "200px",
+                display: "flex",
+                flexDirection: "column"
+            }}>
+                <h4 style={{ marginBottom: 16, color: "#333", fontSize: "16px", fontWeight: "600" }}>Controls</h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
                     <button
                         onClick={onGenerateArray}
                         disabled={isSorting}
                         style={{
-                            padding: "10px 16px",
-                            background: "#4CAF50",
+                            padding: "12px 20px",
+                            background: "grey",
                             color: "white",
                             border: "none",
-                            borderRadius: 6,
+                            borderRadius: 12,
                             cursor: isSorting ? "not-allowed" : "pointer",
                             opacity: isSorting ? 0.6 : 1,
-                            fontWeight: "bold"
+                            fontWeight: "600",
+                            fontSize: "14px",
+                            transition: "all 0.2s ease",
+                            boxShadow: "grey"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isSorting) {
+                                e.currentTarget.style.background = "grey";
+                                e.currentTarget.style.transform = "translateY(-1px)";
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isSorting) {
+                                e.currentTarget.style.background = "grey";
+                                e.currentTarget.style.transform = "translateY(0)";
+                            }
                         }}
                     >
                         Generate New Array
@@ -169,14 +227,29 @@ export default function Sidebar({
                         onClick={onStartSort}
                         disabled={isSorting}
                         style={{
-                            padding: "10px 16px",
-                            background: "#2196F3",
+                            padding: "12px 20px",
+                            background: "grey",
                             color: "white",
                             border: "none",
-                            borderRadius: 6,
+                            borderRadius: 12,
                             cursor: isSorting ? "not-allowed" : "pointer",
                             opacity: isSorting ? 0.6 : 1,
-                            fontWeight: "bold"
+                            fontWeight: "600",
+                            fontSize: "14px",
+                            transition: "all 0.2s ease",
+                            boxShadow: "0 2px 4px rgba(16, 185, 129, 0.2)"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isSorting) {
+                                e.currentTarget.style.background = "grey";
+                                e.currentTarget.style.transform = "translateY(-1px)";
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isSorting) {
+                                e.currentTarget.style.background = "#grey";
+                                e.currentTarget.style.transform = "translateY(0)";
+                            }
                         }}
                     >
                         Start Sorting
@@ -186,50 +259,73 @@ export default function Sidebar({
                         onClick={onReset}
                         disabled={isSorting}
                         style={{
-                            padding: "10px 16px",
-                            background: "#f44336",
+                            padding: "12px 20px",
+                            background: "grey",
                             color: "white",
                             border: "none",
-                            borderRadius: 6,
+                            borderRadius: 12,
                             cursor: isSorting ? "not-allowed" : "pointer",
                             opacity: isSorting ? 0.6 : 1,
-                            fontWeight: "bold"
+                            fontWeight: "600",
+                            fontSize: "14px",
+                            transition: "all 0.2s ease",
+                            boxShadow: "0 2px 4px rgba(107, 114, 128, 0.2)"
+                        }}
+                        onMouseEnter={(e) => {
+                            if (!isSorting) {
+                                e.currentTarget.style.background = "grey";
+                                e.currentTarget.style.transform = "translateY(-1px)";
+                            }
+                        }}
+                        onMouseLeave={(e) => {
+                            if (!isSorting) {
+                                e.currentTarget.style.background = "#grey";
+                                e.currentTarget.style.transform = "translateY(0)";
+                            }
                         }}
                     >
                         Reset
                     </button>
                 </div>
             </div>
-            {/*Legend Section */}
-            <div style={{ marginBottom: 24 }}>
-                <h4 style={{ marginBottom: 12, color: "#555" }}>Legend</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {/*Legend Section - explains what the colors mean in the visualization */}
+            <div style={{ 
+                marginBottom: 24,
+                minHeight: "120px",
+                display: "flex",
+                flexDirection: "column"
+            }}>
+                <h4 style={{ marginBottom: 16, color: "#333", fontSize: "16px", fontWeight: "600" }}>Legend</h4>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <div style={{ 
-                            width: 20, 
-                            height: 20, 
-                            background: "#4CAF50",
-                            borderRadius: 3
+                            width: 24, 
+                            height: 24, 
+                            background: "#10b981",
+                            borderRadius: 6,
+                            boxShadow: "0 2px 4px rgba(16, 185, 129, 0.2)"
                         }}></div>
-                        <span style={{ fontSize: 14, color: "black"}}>Sorted</span>
+                        <span style={{ fontSize: 14, color: "#374151", fontWeight: "500"}}>Sorted</span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <div style={{ 
-                            width: 20, 
-                            height: 20, 
-                            background: "#FF9800",
-                            borderRadius: 3
+                            width: 24, 
+                            height: 24, 
+                            background: "#f59e0b",
+                            borderRadius: 6,
+                            boxShadow: "0 2px 4px rgba(245, 158, 11, 0.2)"
                         }}></div>
-                        <span style={{ fontSize: 14, color: "black"}}>Comparing</span>
+                        <span style={{ fontSize: 14, color: "#374151", fontWeight: "500"}}>Comparing</span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <div style={{ 
-                            width: 20, 
-                            height: 20, 
-                            background: "#2196F3",
-                            borderRadius: 3
+                            width: 24, 
+                            height: 24, 
+                            background: "#3b82f6",
+                            borderRadius: 6,
+                            boxShadow: "0 2px 4px rgba(59, 130, 246, 0.2)"
                         }}></div>
-                        <span style={{ fontSize: 14, color: "black"}}>Unsorted</span>
+                        <span style={{ fontSize: 14, color: "#374151", fontWeight: "500"}}>Unsorted</span>
                     </div>
                 </div>
             </div>

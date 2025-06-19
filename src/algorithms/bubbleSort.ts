@@ -1,4 +1,4 @@
-// bubble sort algorithm
+// bubble sort algorithm - the classic simple sorting method
 export interface SortingStep {
     array: number[];
     comparingIndices: number[];
@@ -9,9 +9,9 @@ export interface SortingStep {
 
 export function bubbleSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
-    const arr = [...array]; // making a copy to avoid mutating original
+    const arr = [...array]; // making a copy to avoid mutating original array
     
-    // the initial step
+    // the initial step - show the starting state
     steps.push({
         array: [...arr],
         comparingIndices: [],
@@ -22,11 +22,11 @@ export function bubbleSort(array: number[]): SortingStep[] {
 
     const n = arr.length;
     
-    // outer loop to number of passes
+    // outer loop to number of passes - each pass puts the largest element in place
     for (let i = 0; i < n - 1; i++) {
-        // inner loop to compare adjacent elements
+        // inner loop to compare adjacent elements - bubble up the largest value
         for (let j = 0; j < n - i - 1; j++) {
-            // shows which elements is being comparing
+            // shows which elements is being comparing - highlight the current pair
             steps.push({
                 array: [...arr],
                 comparingIndices: [j, j + 1],
@@ -35,9 +35,9 @@ export function bubbleSort(array: number[]): SortingStep[] {
                 description: `Comparing elements at positions ${j} and ${j + 1}`
             });
 
-            // if need to swap, show the swap
+            // if need to swap, show the swap - only swap if left is bigger than right
             if (arr[j] > arr[j + 1]) {
-                // show swapping state
+                // show swapping state - highlight the elements being swapped
                 steps.push({
                     array: [...arr],
                     comparingIndices: [],
@@ -46,10 +46,10 @@ export function bubbleSort(array: number[]): SortingStep[] {
                     description: `Swapping ${arr[j]} and ${arr[j + 1]}`
                 });
 
-                //swap the elements
+                //swap the elements - the actual swap operation
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
 
-                // show result after swap
+                // show result after swap - display the new state
                 steps.push({
                     array: [...arr],
                     comparingIndices: [],
@@ -61,7 +61,7 @@ export function bubbleSort(array: number[]): SortingStep[] {
         }
     }
 
-    // final step showing sorted array
+    // final step showing sorted array - we're done!
     steps.push({
         array: [...arr],
         comparingIndices: [],

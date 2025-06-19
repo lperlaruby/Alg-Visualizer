@@ -1,11 +1,11 @@
-// Merge Sort
+// Merge Sort - divide and conquer approach, very efficient
 import { SortingStep } from './bubbleSort';
 
 export function mergeSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
-    const arr = [...array];
+    const arr = [...array]; // copy to avoid mutating original
     
-    // Initial step
+    // Initial step - show starting state
     steps.push({
         array: [...arr],
         comparingIndices: [],
@@ -14,14 +14,16 @@ export function mergeSort(array: number[]): SortingStep[] {
         description: "Starting merge sort..."
     });
 
+    // merge function - combines two sorted subarrays into one sorted array
     const merge = (left: number, mid: number, right: number) => {
-        const tempArray = new Array(right - left + 1);
-        let i = left;
-        let j = mid + 1;
-        let k = 0;
+        const tempArray = new Array(right - left + 1); // temporary array to hold merged result
+        let i = left; // index for left subarray
+        let j = mid + 1; // index for right subarray
+        let k = 0; // index for temp array
 
+        // merge the two subarrays by comparing elements
         while (i <= mid && j <= right) {
-            // Show comparison
+            // Show comparison - highlight what we're comparing
             steps.push({
                 array: [...arr],
                 comparingIndices: [i, j],
@@ -30,6 +32,7 @@ export function mergeSort(array: number[]): SortingStep[] {
                 description: `Comparing ${arr[i]} with ${arr[j]}`
             });
 
+            // take the smaller element from either subarray
             if (arr[i] <= arr[j]) {
                 tempArray[k] = arr[i];
                 i++;
@@ -40,24 +43,26 @@ export function mergeSort(array: number[]): SortingStep[] {
             k++;
         }
 
+        // copy remaining elements from left subarray if any
         while (i <= mid) {
             tempArray[k] = arr[i];
             i++;
             k++;
         }
 
+        // copy remaining elements from right subarray if any
         while (j <= right) {
             tempArray[k] = arr[j];
             j++;
             k++;
         }
 
-        // Copy back to original array
+        // Copy back to original array - put merged result back
         for (let i = 0; i < k; i++) {
             arr[left + i] = tempArray[i];
         }
 
-        // Show merged result
+        // Show merged result - display the sorted subarray
         steps.push({
             array: [...arr],
             comparingIndices: [],
@@ -67,11 +72,12 @@ export function mergeSort(array: number[]): SortingStep[] {
         });
     };
 
+    // recursive helper function - this does the divide and conquer
     const mergeSortHelper = (left: number, right: number) => {
         if (left < right) {
-            const mid = Math.floor((left + right) / 2);
+            const mid = Math.floor((left + right) / 2); // find middle point
             
-            // Show division
+            // Show division - highlight how we're splitting the array
             steps.push({
                 array: [...arr],
                 comparingIndices: [],
@@ -80,15 +86,15 @@ export function mergeSort(array: number[]): SortingStep[] {
                 description: `Dividing array from ${left} to ${right} at ${mid}`
             });
             
-            mergeSortHelper(left, mid);
-            mergeSortHelper(mid + 1, right);
-            merge(left, mid, right);
+            mergeSortHelper(left, mid); // sort left half
+            mergeSortHelper(mid + 1, right); // sort right half
+            merge(left, mid, right); // merge the two sorted halves
         }
     };
 
-    mergeSortHelper(0, arr.length - 1);
+    mergeSortHelper(0, arr.length - 1); // start the recursive process
 
-    // Final step
+    // Final step - we're all done!
     steps.push({
         array: [...arr],
         comparingIndices: [],

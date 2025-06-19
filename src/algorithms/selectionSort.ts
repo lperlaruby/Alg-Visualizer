@@ -2,8 +2,9 @@ import { SortingStep } from './bubbleSort';
 
 export function selectionSort(array: number[]): SortingStep[] {
   const steps: SortingStep[] = [];
-  const arr = [...array];
+  const arr = [...array]; // copy the array so we don't mess up the original
   
+  // starting step - show the initial state
   steps.push({
     array: [...arr],
     comparingIndices: [],
@@ -14,12 +15,13 @@ export function selectionSort(array: number[]): SortingStep[] {
 
   const n = arr.length;
   
+  // main loop - find the minimum and put it in the right place
   for (let i = 0; i < n - 1; i++) {
-    let minIndex = i;
+    let minIndex = i; // assume current position has the minimum
     
-    //findng the minimum element in unsorted portion
+    //findng the minimum element in unsorted portion - scan through remaining elements
     for (let j = i + 1; j < n; j++) {
-      // Show comparison
+      // Show comparison - highlight what we're comparing
       steps.push({
         array: [...arr],
         comparingIndices: [minIndex, j],
@@ -28,14 +30,15 @@ export function selectionSort(array: number[]): SortingStep[] {
         description: `Comparing ${arr[minIndex]} with ${arr[j]}`
       });
       
+      // if we found a smaller element, update our minimum
       if (arr[j] < arr[minIndex]) {
         minIndex = j;
       }
     }
     
-    // swapping if minimum is not already in position
+    // swapping if minimum is not already in position - only swap if needed
     if (minIndex !== i) {
-      // show swap
+      // show swap - highlight the elements being swapped
       steps.push({
         array: [...arr],
         comparingIndices: [],
@@ -44,9 +47,10 @@ export function selectionSort(array: number[]): SortingStep[] {
         description: `Swapping ${arr[i]} with minimum ${arr[minIndex]}`
       });
       
+      // do the actual swap
       [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
       
-      // show result
+      // show result - display the new state after swap
       steps.push({
         array: [...arr],
         comparingIndices: [],
@@ -55,7 +59,7 @@ export function selectionSort(array: number[]): SortingStep[] {
         description: `Moved ${arr[minIndex]} to position ${i}`
       });
     } else {
-      // element is already in correct position
+      // element is already in correct position - no swap needed
       steps.push({
         array: [...arr],
         comparingIndices: [],
@@ -66,7 +70,7 @@ export function selectionSort(array: number[]): SortingStep[] {
     }
   }
   
-  // final step
+  // final step - we're all done!
   steps.push({
     array: [...arr],
     comparingIndices: [],
