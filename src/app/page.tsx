@@ -1,103 +1,104 @@
-import Image from "next/image";
+"use client" // this is a client component
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+import { useState, useCallback, useEffect } from "react";
+import Sidebar from "@/components/Sidebar";
+import SortingVisualizer from "@/components/SortingVisualizer";
+
+export default function HomePage() {
+  // all the state we need
+  const [array, setArray] = useState<number[]>([]);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState("bubble");
+  const [arraySize, setArraySize] = useState(20);
+  const [speed, setSpeed] = useState(50);
+  const [isSorting, setIsSorting] = useState(false);
+
+  // function to handle the algorithm change
+  const handleAlgorithmChange = useCallback((algorithm: string) => {
+    console.log("Algorithm changed to:", algorithm);
+    setSelectedAlgorithm(algorithm);
+  }, []);
+  // function to handle the array size change
+  const handleArraySizeChange = useCallback((size: number) => {
+    console.log("Array size changed to:", size);
+    //create a new array with the new size
+    generateNewArray(size);
+  }, []);
+  
+  // function to handle the speed change
+  const handleSpeedChange = useCallback((speed: number) => {
+    console.log("Speed changed to:", speed);
+    setSpeed(speed);
+  }, []);
+  // function to generate a new array
+  const generateNewArray = useCallback((size?: number) => {
+    const newSize = size || arraySize;
+    const newArray = Array.from({ length: newSize }, () => 
+        Math.floor(Math.random() * 100) + 1
+    );
+    // set the new array
+    setArray(newArray);
+    console.log('Generated new array:', newArray);
+}, [arraySize]);
+
+// function to handle the generate array button
+const handleGenerateArray = useCallback(() => {
+    generateNewArray();
+}, [generateNewArray]);
+
+// function to handle the start sort button
+const handleStartSort = useCallback(() => {
+    console.log('Starting sort with algorithm:', selectedAlgorithm);
+    setIsSorting(true);
+    // TODO: Implement actual sorting logic
+    // For now, just simulate sorting
+    setTimeout(() => {
+        setIsSorting(false);
+        console.log('Sorting completed');
+    }, 2000);
+}, [selectedAlgorithm]);
+
+// function to handle the reset button
+const handleReset = useCallback(() => {
+    console.log('Resetting...');
+    setIsSorting(false);
+    generateNewArray();
+}, [generateNewArray]);
+
+// intial array when component mounts
+useEffect(() => {
+  generateNewArray();
+}, []);
+
+    return (
+       <div style={{ 
+        display: 'flex',
+        minHeight: '100vh',
+        background: '#f7f7f7', //light background    
+       }}>
+        <Sidebar
+            onAlgorithmChange={handleAlgorithmChange}
+            onArraySizeChange={handleArraySizeChange}
+            onSpeedChange={handleSpeedChange}
+            onGenerateArray={handleGenerateArray}
+            onStartSort={handleStartSort}
+            onReset={handleReset}
+            isSorting={isSorting}
         />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <main style={{
+          flex: 1,
+          background: '#fff',
+          margin: 40,
+          borderRadius: 8,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+          <SortingVisualizer 
+            array={array}
+            isSorting={isSorting}
+            selectedAlgorithm={selectedAlgorithm}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+        </main>
+       </div>
+    );
 }
