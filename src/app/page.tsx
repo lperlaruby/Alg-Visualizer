@@ -3,6 +3,12 @@
 import { useState, useCallback, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import SortingVisualizer from "@/components/SortingVisualizer";
+import Header from "@/components/Header";
+import { bubbleSort, SortingStep } from '@/algorithms/bubbleSort';
+import { selectionSort } from '@/algorithms/selectionSort';
+import { insertionSort } from '@/algorithms/insertionSort';
+import { mergeSort } from '@/algorithms/mergeSort';
+import { quickSort } from '@/algorithms/quickSort';
 
 export default function HomePage() {
   // all the state we need
@@ -11,6 +17,16 @@ export default function HomePage() {
   const [arraySize, setArraySize] = useState(20);
   const [speed, setSpeed] = useState(50);
   const [isSorting, setIsSorting] = useState(false);
+
+  // Add new state for visualization
+  const [comparingIndices, setComparingIndices] = useState<number[]>([]);
+  const [swappingIndices, setSwappingIndices] = useState<number[]>([]);
+  const [sortedIndices, setSortedIndices] = useState<number[]>([]);
+  const [description, setDescription] = useState<string>("");
+
+  // Add new state for managing steps
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [sortingSteps, setSortingSteps] = useState<SortingStep[]>([]);
 
   // function to handle the algorithm change
   const handleAlgorithmChange = useCallback((algorithm: string) => {
@@ -35,10 +51,13 @@ export default function HomePage() {
     const newArray = Array.from({ length: newSize }, () => 
         Math.floor(Math.random() * 100) + 1
     );
-    // set the new array
     setArray(newArray);
+    // Reset visualization state
+    setComparingIndices([]);
+    setSwappingIndices([]);
+    setSortedIndices([]);
     console.log('Generated new array:', newArray);
-}, [arraySize]);
+  }, [arraySize]);
 
 // function to handle the generate array button
 const handleGenerateArray = useCallback(() => {
@@ -49,18 +68,56 @@ const handleGenerateArray = useCallback(() => {
 const handleStartSort = useCallback(() => {
     console.log('Starting sort with algorithm:', selectedAlgorithm);
     setIsSorting(true);
-    // TODO: Implement actual sorting logic
-    // For now, just simulate sorting
-    setTimeout(() => {
-        setIsSorting(false);
-        console.log('Sorting completed');
-    }, 2000);
-}, [selectedAlgorithm]);
+    setCurrentStepIndex(0);
+    
+    let steps: SortingStep[] = [];
+    
+    switch (selectedAlgorithm) {
+        case 'bubble':
+            steps = bubbleSort(array);
+            break;
+        case 'selection':
+            steps = selectionSort(array);
+            break;
+        case 'insertion':
+            steps = insertionSort(array);
+            break;
+        case 'merge':
+            steps = mergeSort(array);
+            break;
+        case 'quick':
+            steps = quickSort(array);
+            break;
+        default:
+            steps = bubbleSort(array);
+    }
+    
+    setSortingSteps(steps);
+    
+    const animateSort = () => {
+        if (currentStepIndex < steps.length - 1) {
+            setTimeout(() => {
+                setCurrentStepIndex(prev => prev + 1);
+                animateSort();
+            }, 2000 / speed);
+        } else {
+            setIsSorting(false);
+        }
+    };
+    
+    animateSort();
+}, [selectedAlgorithm, array, speed, currentStepIndex]);
 
 // function to handle the reset button
 const handleReset = useCallback(() => {
     console.log('Resetting...');
     setIsSorting(false);
+    setCurrentStepIndex(0);
+    setSortingSteps([]);
+    setComparingIndices([]);
+    setSwappingIndices([]);
+    setSortedIndices([]);
+    setDescription("");
     generateNewArray();
 }, [generateNewArray]);
 
@@ -69,36 +126,58 @@ useEffect(() => {
   generateNewArray();
 }, []);
 
+// Add useEffect to update visualization based on current step
+useEffect(() => {
+    if (sortingSteps.length > 0 && currentStepIndex < sortingSteps.length) {
+        const currentStep = sortingSteps[currentStepIndex];
+        setComparingIndices(currentStep.comparingIndices);
+        setSwappingIndices(currentStep.swappingIndices);
+        setSortedIndices(currentStep.sortedIndices);
+        setDescription(currentStep.description);
+    }
+}, [currentStepIndex, sortingSteps]);
+
     return (
        <div style={{ 
         display: 'flex',
+        flexDirection: 'column',
         minHeight: '100vh',
         background: '#f7f7f7', //light background    
        }}>
-        <Sidebar
-            onAlgorithmChange={handleAlgorithmChange}
-            onArraySizeChange={handleArraySizeChange}
-            onSpeedChange={handleSpeedChange}
-            onGenerateArray={handleGenerateArray}
-            onStartSort={handleStartSort}
-            onReset={handleReset}
-            isSorting={isSorting}
-        />
-        <main style={{
-          flex: 1,
-          background: '#fff',
-          margin: 40,
-          borderRadius: 8,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+        <Header />
+        <div style={{ 
           display: 'flex',
-          flexDirection: 'column',
+          flex: 1,
         }}>
-          <SortingVisualizer 
-            array={array}
-            isSorting={isSorting}
-            selectedAlgorithm={selectedAlgorithm}
+          <Sidebar
+              onAlgorithmChange={handleAlgorithmChange}
+              onArraySizeChange={handleArraySizeChange}
+              onSpeedChange={handleSpeedChange}
+              onGenerateArray={handleGenerateArray}
+              onStartSort={handleStartSort}
+              onReset={handleReset}
+              isSorting={isSorting}
           />
-        </main>
+          <main style={{
+            flex: 1,
+            background: '#fff',
+            margin: 40,
+            borderRadius: 8,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+            <SortingVisualizer 
+              array={array}
+              isSorting={isSorting}
+              selectedAlgorithm={selectedAlgorithm}
+              comparingIndices={comparingIndices}
+              swappingIndices={swappingIndices}
+              sortedIndices={sortedIndices}
+              description={description}
+            />
+          </main>
+        </div>
        </div>
     );
 }

@@ -58,7 +58,6 @@ export default function Sidebar({
             height: "100vh",
             overflowY: "auto",            
         }}>
-        <h3 style={{ marginTop: 0, color: "#333" }}>Algorithm Visualizer</h3>
 
         {/* Algorithm Selector Section*/}
         <div style={{ marginBottom: 24 }}>
