@@ -27,27 +27,10 @@ export default function SortingVisualizer({
             flexDirection: 'column',
             gap: '20px'
         }}>
-            {/* Header Section - this shows what algorithm we're using */}
-            <div style={{
-                textAlign: 'center',
-                padding: '20px',
-                background: 'white',
-                color: 'black',
-                borderRadius: '8px',
-                marginBottom: '20px'
-            }}>
-                <h1 style={{ margin: 0, fontSize: '2.5rem', fontWeight: 'bold' }}>
-                    Algorithm Visualizer
-                </h1>
-                <p style={{ margin: '10px 0 0 0', fontSize: '1.1rem', opacity: 0.9 }}>
-                    {selectedAlgorithm.charAt(0).toUpperCase() + selectedAlgorithm.slice(1)} Sort
-                </p>
-            </div>
-
-            {/* Status Bar - shows array info and current status */}
+            {/* Status Bar - shows array info */}
             <div style={{
                 display: 'flex',
-                justifyContent: 'space-between',
+                justifyContent: 'flex-start',
                 alignItems: 'center',
                 padding: '15px 20px',
                 background: '#fff',
@@ -62,16 +45,6 @@ export default function SortingVisualizer({
                     <span style={{ fontWeight: 'bold', color: '#495057' }}>
                         Max Value: <span style={{ color: '#007bff' }}>{Math.max(...array)}</span>
                     </span>
-                </div>
-                <div style={{
-                    padding: '8px 16px',
-                    borderRadius: '20px',
-                    background: isSorting ? '#ffc107' : 'black',
-                    color: isSorting ? '#000' : '#fff',
-                    fontWeight: 'bold',
-                    fontSize: '14px'
-                }}>
-                    {isSorting ? '🔄 Sorting...' : 'Ready'}
                 </div>
             </div>
 

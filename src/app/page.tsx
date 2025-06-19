@@ -9,6 +9,8 @@ import { selectionSort } from '@/algorithms/selectionSort';
 import { insertionSort } from '@/algorithms/insertionSort';
 import { mergeSort } from '@/algorithms/mergeSort';
 import { quickSort } from '@/algorithms/quickSort';
+import CodeDisplay from "@/components/CodeDisplay";
+import Controls from "@/components/Controls";
 
 export default function HomePage() {
   // all the state we need to track everything
@@ -154,35 +156,45 @@ useEffect(() => {
           flex: 1,
           padding: '20px',
           gap: '20px',
-          position: 'relative',
         }}>
           <Sidebar
               onAlgorithmChange={handleAlgorithmChange}
               onArraySizeChange={handleArraySizeChange}
               onSpeedChange={handleSpeedChange}
-              onGenerateArray={handleGenerateArray}
-              onStartSort={handleStartSort}
-              onReset={handleReset}
               isSorting={isSorting}
           />
           <main style={{
             flex: 1,
-            background: '#fff',
-            borderRadius: 16,
-            boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden',
+            gap: '20px',
           }}>
-            <SortingVisualizer 
-              array={array}
-              isSorting={isSorting}
-              selectedAlgorithm={selectedAlgorithm}
-              comparingIndices={comparingIndices}
-              swappingIndices={swappingIndices}
-              sortedIndices={sortedIndices}
-              description={description}
+            <Controls 
+                onGenerateArray={handleGenerateArray}
+                onStartSort={handleStartSort}
+                onReset={handleReset}
+                isSorting={isSorting}
             />
+            <CodeDisplay selectedAlgorithm={selectedAlgorithm} />
+            <div style={{
+              background: '#fff',
+              borderRadius: 16,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              flex: 1,
+            }}>
+              <SortingVisualizer 
+                array={array}
+                isSorting={isSorting}
+                selectedAlgorithm={selectedAlgorithm}
+                comparingIndices={comparingIndices}
+                swappingIndices={swappingIndices}
+                sortedIndices={sortedIndices}
+                description={description}
+              />
+            </div>
           </main>
         </div>
        </div>

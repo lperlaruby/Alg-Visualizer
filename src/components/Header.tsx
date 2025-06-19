@@ -11,7 +11,7 @@ const Header: React.FC = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold tracking-tight -ml-30">
-                  Algorithm Visualizer
+                  ALGORITHM VISUALIZER
                 </h1>
               </div>
             </div>

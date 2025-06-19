@@ -4,9 +4,6 @@ interface SidebarProps {
     onAlgorithmChange: (algorithm: string) => void;
     onArraySizeChange: (size: number) => void;
     onSpeedChange: (speed: number) => void;
-    onGenerateArray: () => void;
-    onStartSort:() => void;
-    onReset: () => void;
     isSorting: boolean;
 }
 
@@ -23,20 +20,19 @@ export default function Sidebar({
     onAlgorithmChange,
     onArraySizeChange,
     onSpeedChange,
-    onGenerateArray,
-    onStartSort,
-    onReset,
     isSorting,
 }: SidebarProps) {
     // local state for controls - keep track of what user has selected
     const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubble');
     const [arraySize, setArraySize] = useState(20);
     const [speed, setSpeed] = useState(50);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     // handlers for controls - these update local state and call parent functions
     const handleAlgorithmChange = (algorithmId: string) => {
         setSelectedAlgorithm(algorithmId); //update local state
         onAlgorithmChange(algorithmId); //call parent handler
+        setIsDropdownOpen(false); //close dropdown after selection
     };
 
     const handleArraySizeChange = (size: number) => {
@@ -49,6 +45,8 @@ export default function Sidebar({
         onSpeedChange(speed); //call parent handler
     };
 
+    const selectedAlgorithmData = algorithms.find(alg => alg.id === selectedAlgorithm);
+
     return (
         <aside style={{ 
             width: "320px",
@@ -56,64 +54,125 @@ export default function Sidebar({
             padding: "24px",
             borderRadius: "16px",
             boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-            height: "fit-content",
-            maxHeight: "calc(100vh - 120px)",
-            overflowY: "auto",
-            position: "sticky",
-            top: "20px",
             border: "1px solid rgba(0,0,0,0.05)",
+            display: 'flex',
+            flexDirection: 'column',
         }}>
 
         {/* Algorithm Selector Section - user picks which sorting method to use */}
         <div style={{ 
             marginBottom: 28,
-            minHeight: "200px",
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
+            position: "relative"
         }}>
                 <h4 style={{ marginBottom: 16, color: "#333", fontSize: "16px", fontWeight: "600" }}>Select Algorithm</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-                    {algorithms.map((algorithm) => (
-                        <label 
-                            key={algorithm.id}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                padding: "12px 16px",
-                                background: selectedAlgorithm === algorithm.id ? "#f0f8ff" : "#fafafa",
-                                border: selectedAlgorithm === algorithm.id ? "2px solid #3b82f6" : "1px solid #e5e7eb",
-                                borderRadius: 12,
-                                cursor: isSorting ? "not-allowed" : "pointer",
-                                opacity: isSorting ? 0.6 : 1,
-                                transition: "all 0.2s ease",
-                                boxShadow: selectedAlgorithm === algorithm.id ? "0 2px 8px rgba(59, 130, 246, 0.15)" : "none"
-                            }}
-                        >
-                            <input
-                                type="radio"
-                                name="algorithm"
-                                value={algorithm.id}
-                                checked={selectedAlgorithm === algorithm.id}
-                                onChange={(e) => handleAlgorithmChange(e.target.value)}
-                                disabled={isSorting}
-                                style={{ marginRight: 12 }}
-                            />
-                            <div>
+                
+                {/* Dropdown Button */}
+                <button
+                    onClick={() => !isSorting && setIsDropdownOpen(!isDropdownOpen)}
+                    disabled={isSorting}
+                    style={{
+                        padding: "12px 20px",
+                        background: "grey",
+                        color: "white",
+                        border: "none",
+                        borderRadius: 12,
+                        cursor: isSorting ? "not-allowed" : "pointer",
+                        opacity: isSorting ? 0.6 : 1,
+                        fontWeight: "600",
+                        fontSize: "14px",
+                        transition: "all 0.2s ease",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        textAlign: "left",
+                        width: "100%"
+                    }}
+                    onMouseEnter={(e) => {
+                        if (!isSorting) {
+                            e.currentTarget.style.transform = "translateY(-1px)";
+                        }
+                    }}
+                    onMouseLeave={(e) => {
+                        if (!isSorting) {
+                            e.currentTarget.style.transform = "translateY(0)";
+                        }
+                    }}
+                >
+                    <div>
+                        <div style={{ fontWeight: "600", fontSize: 14 }}>
+                            {selectedAlgorithmData?.name}
+                        </div>
+                        <div style={{ fontSize: 12, opacity: 0.8, marginTop: 2 }}>
+                            {selectedAlgorithmData?.description}
+                        </div>
+                    </div>
+                    <div style={{ 
+                        transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                        transition: "transform 0.2s ease",
+                        fontSize: "12px"
+                    }}>
+                        ▼
+                    </div>
+                </button>
+
+                {/* Dropdown Options */}
+                {isDropdownOpen && !isSorting && (
+                    <div style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: 0,
+                        right: 0,
+                        background: "white",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: 12,
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+                        zIndex: 1000,
+                        marginTop: 4,
+                        maxHeight: "300px",
+                        overflowY: "auto"
+                    }}>
+                        {algorithms.map((algorithm) => (
+                            <button
+                                key={algorithm.id}
+                                onClick={() => handleAlgorithmChange(algorithm.id)}
+                                style={{
+                                    width: "100%",
+                                    padding: "12px 20px",
+                                    background: selectedAlgorithm === algorithm.id ? "#f0f8ff" : "transparent",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    textAlign: "left",
+                                    transition: "all 0.2s ease",
+                                    borderBottom: "1px solid #f3f4f6"
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (selectedAlgorithm !== algorithm.id) {
+                                        e.currentTarget.style.background = "#f9fafb";
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (selectedAlgorithm !== algorithm.id) {
+                                        e.currentTarget.style.background = "transparent";
+                                    }
+                                }}
+                            >
                                 <div style={{ fontWeight: "600", fontSize: 14, color: "#1f2937" }}>
                                     {algorithm.name}
                                 </div>
                                 <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>
                                     {algorithm.description}
                                 </div>
-                            </div>
-                        </label>
-                    ))}
-                </div>
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
                {/* Array Size Control Section - user can make array bigger or smaller */}
                <div style={{ 
                 marginBottom: 28,
-                minHeight: "120px",
                 display: "flex",
                 flexDirection: "column"
             }}>
@@ -149,7 +208,6 @@ export default function Sidebar({
                 {/* Animation Speed Control Section - user controls how fast the animation plays */}
                 <div style={{ 
                 marginBottom: 28,
-                minHeight: "120px",
                 display: "flex",
                 flexDirection: "column"
             }}>
@@ -182,121 +240,15 @@ export default function Sidebar({
                     </span>
                 </div>
             </div>
-            {/* Control Buttons Section - the main action buttons */}
+            {/* Legend Section - explains what the colors mean in the visualization */}
             <div style={{ 
-                marginBottom: 28,
-                minHeight: "200px",
+                marginTop: 'auto',
                 display: "flex",
-                flexDirection: "column"
-            }}>
-                <h4 style={{ marginBottom: 16, color: "#333", fontSize: "16px", fontWeight: "600" }}>Controls</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
-                    <button
-                        onClick={onGenerateArray}
-                        disabled={isSorting}
-                        style={{
-                            padding: "12px 20px",
-                            background: "grey",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 12,
-                            cursor: isSorting ? "not-allowed" : "pointer",
-                            opacity: isSorting ? 0.6 : 1,
-                            fontWeight: "600",
-                            fontSize: "14px",
-                            transition: "all 0.2s ease",
-                            boxShadow: "grey"
-                        }}
-                        onMouseEnter={(e) => {
-                            if (!isSorting) {
-                                e.currentTarget.style.background = "grey";
-                                e.currentTarget.style.transform = "translateY(-1px)";
-                            }
-                        }}
-                        onMouseLeave={(e) => {
-                            if (!isSorting) {
-                                e.currentTarget.style.background = "grey";
-                                e.currentTarget.style.transform = "translateY(0)";
-                            }
-                        }}
-                    >
-                        Generate New Array
-                    </button>
-                    
-                    <button
-                        onClick={onStartSort}
-                        disabled={isSorting}
-                        style={{
-                            padding: "12px 20px",
-                            background: "grey",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 12,
-                            cursor: isSorting ? "not-allowed" : "pointer",
-                            opacity: isSorting ? 0.6 : 1,
-                            fontWeight: "600",
-                            fontSize: "14px",
-                            transition: "all 0.2s ease",
-                            boxShadow: "0 2px 4px rgba(16, 185, 129, 0.2)"
-                        }}
-                        onMouseEnter={(e) => {
-                            if (!isSorting) {
-                                e.currentTarget.style.background = "grey";
-                                e.currentTarget.style.transform = "translateY(-1px)";
-                            }
-                        }}
-                        onMouseLeave={(e) => {
-                            if (!isSorting) {
-                                e.currentTarget.style.background = "#grey";
-                                e.currentTarget.style.transform = "translateY(0)";
-                            }
-                        }}
-                    >
-                        Start Sorting
-                    </button>
-                    
-                    <button
-                        onClick={onReset}
-                        disabled={isSorting}
-                        style={{
-                            padding: "12px 20px",
-                            background: "grey",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 12,
-                            cursor: isSorting ? "not-allowed" : "pointer",
-                            opacity: isSorting ? 0.6 : 1,
-                            fontWeight: "600",
-                            fontSize: "14px",
-                            transition: "all 0.2s ease",
-                            boxShadow: "0 2px 4px rgba(107, 114, 128, 0.2)"
-                        }}
-                        onMouseEnter={(e) => {
-                            if (!isSorting) {
-                                e.currentTarget.style.background = "grey";
-                                e.currentTarget.style.transform = "translateY(-1px)";
-                            }
-                        }}
-                        onMouseLeave={(e) => {
-                            if (!isSorting) {
-                                e.currentTarget.style.background = "#grey";
-                                e.currentTarget.style.transform = "translateY(0)";
-                            }
-                        }}
-                    >
-                        Reset
-                    </button>
-                </div>
-            </div>
-            {/*Legend Section - explains what the colors mean in the visualization */}
-            <div style={{ 
-                marginBottom: 24,
-                minHeight: "120px",
-                display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
+                gap: 12
             }}>
                 <h4 style={{ marginBottom: 16, color: "#333", fontSize: "16px", fontWeight: "600" }}>Legend</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <div style={{ 
                             width: 24, 
