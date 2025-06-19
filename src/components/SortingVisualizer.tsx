@@ -145,7 +145,7 @@ export default function SortingVisualizer({
                             backgroundColor: '#dc3545',
                             borderRadius: '4px'
                         }}></div>
-                        <span style={{ fontSize: '14px', color: '#495057' }}>Swapping</span>
+                        <span style={{ fontSize: '14px', color: '#black' }}>Swapping</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div style={{

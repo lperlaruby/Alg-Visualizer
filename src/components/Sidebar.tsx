@@ -211,7 +211,7 @@ export default function Sidebar({
                             background: "#4CAF50",
                             borderRadius: 3
                         }}></div>
-                        <span style={{ fontSize: 14 }}>Sorted</span>
+                        <span style={{ fontSize: 14, color: "black"}}>Sorted</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <div style={{ 
@@ -220,7 +220,7 @@ export default function Sidebar({
                             background: "#FF9800",
                             borderRadius: 3
                         }}></div>
-                        <span style={{ fontSize: 14 }}>Comparing</span>
+                        <span style={{ fontSize: 14, color: "black"}}>Comparing</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <div style={{ 
@@ -229,7 +229,7 @@ export default function Sidebar({
                             background: "#2196F3",
                             borderRadius: 3
                         }}></div>
-                        <span style={{ fontSize: 14 }}>Unsorted</span>
+                        <span style={{ fontSize: 14, color: "black"}}>Unsorted</span>
                     </div>
                 </div>
             </div>
