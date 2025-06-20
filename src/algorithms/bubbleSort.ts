@@ -17,7 +17,7 @@ export function bubbleSort(array: number[]): SortingStep[] {
         comparingIndices: [],
         swappingIndices: [],
         sortedIndices: [],
-        description: "Starting bubble sort..."
+        description: "starting bubble sort..."
     });
 
     const n = arr.length;
@@ -31,8 +31,8 @@ export function bubbleSort(array: number[]): SortingStep[] {
                 array: [...arr],
                 comparingIndices: [j, j + 1],
                 swappingIndices: [],
-                sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index), // Elements from end are sorted
-                description: `Comparing elements at positions ${j} and ${j + 1}`
+                sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index), // elements from end are sorted
+                description: `comparing elements at positions ${j} and ${j + 1}`
             });
 
             // if need to swap, show the swap - only swap if left is bigger than right
@@ -43,10 +43,10 @@ export function bubbleSort(array: number[]): SortingStep[] {
                     comparingIndices: [],
                     swappingIndices: [j, j + 1],
                     sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index),
-                    description: `Swapping ${arr[j]} and ${arr[j + 1]}`
+                    description: `swapping ${arr[j]} and ${arr[j + 1]}`
                 });
 
-                //swap the elements - the actual swap operation
+                // swap the elements - the actual swap operation
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
 
                 // show result after swap - display the new state
@@ -55,7 +55,7 @@ export function bubbleSort(array: number[]): SortingStep[] {
                     comparingIndices: [],
                     swappingIndices: [],
                     sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index),
-                    description: `Swapped ${arr[j + 1]} and ${arr[j]}`
+                    description: `swapped ${arr[j + 1]} and ${arr[j]}`
                 });
             }
         }
@@ -66,8 +66,8 @@ export function bubbleSort(array: number[]): SortingStep[] {
         array: [...arr],
         comparingIndices: [],
         swappingIndices: [],
-        sortedIndices: Array.from({length: n}, (_, index) => index), // All elements are sorted
-        description: "Array is now sorted!"
+        sortedIndices: Array.from({length: n}, (_, index) => index), // all elements are sorted
+        description: "array is now sorted!"
     });
 
     return steps;

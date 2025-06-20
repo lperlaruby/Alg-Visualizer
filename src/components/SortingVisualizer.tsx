@@ -1,5 +1,6 @@
 import ArrayBars from './ArrayBars';
 
+// interface for the sorting visualizer props - defines what data we need
 interface SortingVisualizerProps {
     array: number[];
     isSorting: boolean;
@@ -28,13 +29,14 @@ export default function SortingVisualizer({
             gap: '20px'
         }}>
 
-            {/* Visualization Area - this is where the bars are shown */}
+            {/* visualization area - this is where the bars are shown */}
             <div style={{
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '20px'
             }}>
+                {/* the main array bars component that shows the actual visualization */}
                 <ArrayBars 
                     array={array}
                     comparingIndices={comparingIndices}
@@ -42,7 +44,7 @@ export default function SortingVisualizer({
                     sortedIndices={sortedIndices}
                 />
                 
-                {/* Legend - explains what the colors mean */}
+                {/* legend - explains what the colors mean */}
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -52,6 +54,7 @@ export default function SortingVisualizer({
                     borderRadius: '8px',
                     border: '1px solid #e9ecef'
                 }}>
+                    {/* unsorted elements - gray color */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div style={{
                             width: '20px',
@@ -61,6 +64,7 @@ export default function SortingVisualizer({
                         }}></div>
                         <span style={{ fontSize: '14px', color: '#495057' }}>Unsorted</span>
                     </div>
+                    {/* comparing elements - yellow color */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div style={{
                             width: '20px',
@@ -70,6 +74,7 @@ export default function SortingVisualizer({
                         }}></div>
                         <span style={{ fontSize: '14px', color: '#495057' }}>Comparing</span>
                     </div>
+                    {/* swapping elements - red color */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div style={{
                             width: '20px',
@@ -79,6 +84,7 @@ export default function SortingVisualizer({
                         }}></div>
                         <span style={{ fontSize: '14px', color: '#495057' }}>Swapping</span>
                     </div>
+                    {/* sorted elements - green color */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div style={{
                             width: '20px',

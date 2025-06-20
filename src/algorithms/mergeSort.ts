@@ -1,17 +1,17 @@
-// Merge Sort - divide and conquer approach, very efficient
+// merge sort - divide and conquer approach, very efficient
 import { SortingStep } from './bubbleSort';
 
 export function mergeSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array]; // copy to avoid mutating original
     
-    // Initial step - show starting state
+    // initial step - show starting state
     steps.push({
         array: [...arr],
         comparingIndices: [],
         swappingIndices: [],
         sortedIndices: [],
-        description: "Starting merge sort..."
+        description: "starting merge sort..."
     });
 
     // merge function - combines two sorted subarrays into one sorted array
@@ -23,13 +23,13 @@ export function mergeSort(array: number[]): SortingStep[] {
 
         // merge the two subarrays by comparing elements
         while (i <= mid && j <= right) {
-            // Show comparison - highlight what we're comparing
+            // show comparison - highlight what we're comparing
             steps.push({
                 array: [...arr],
                 comparingIndices: [i, j],
                 swappingIndices: [],
                 sortedIndices: [],
-                description: `Comparing ${arr[i]} with ${arr[j]}`
+                description: `comparing ${arr[i]} with ${arr[j]}`
             });
 
             // take the smaller element from either subarray
@@ -57,18 +57,18 @@ export function mergeSort(array: number[]): SortingStep[] {
             k++;
         }
 
-        // Copy back to original array - put merged result back
+        // copy back to original array - put merged result back
         for (let i = 0; i < k; i++) {
             arr[left + i] = tempArray[i];
         }
 
-        // Show merged result - display the sorted subarray
+        // show merged result - display the sorted subarray
         steps.push({
             array: [...arr],
             comparingIndices: [],
             swappingIndices: [],
             sortedIndices: Array.from({length: right - left + 1}, (_, index) => left + index),
-            description: `Merged subarray from ${left} to ${right}`
+            description: `merged subarray from ${left} to ${right}`
         });
     };
 
@@ -77,13 +77,13 @@ export function mergeSort(array: number[]): SortingStep[] {
         if (left < right) {
             const mid = Math.floor((left + right) / 2); // find middle point
             
-            // Show division - highlight how we're splitting the array
+            // show division - highlight how we're splitting the array
             steps.push({
                 array: [...arr],
                 comparingIndices: [],
                 swappingIndices: [],
                 sortedIndices: [],
-                description: `Dividing array from ${left} to ${right} at ${mid}`
+                description: `dividing array from ${left} to ${right} at ${mid}`
             });
             
             mergeSortHelper(left, mid); // sort left half
@@ -94,13 +94,13 @@ export function mergeSort(array: number[]): SortingStep[] {
 
     mergeSortHelper(0, arr.length - 1); // start the recursive process
 
-    // Final step - we're all done!
+    // final step - we're all done!
     steps.push({
         array: [...arr],
         comparingIndices: [],
         swappingIndices: [],
         sortedIndices: Array.from({length: arr.length}, (_, index) => index),
-        description: "Array is now sorted!"
+        description: "array is now sorted!"
     });
 
     return steps;

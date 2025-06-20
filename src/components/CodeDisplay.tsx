@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 
+// interface for the code display component props
 interface CodeDisplayProps {
   selectedAlgorithm: string;
 }
 
 const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
+  // state to track which programming language is selected
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
 
-  // Example code snippets for different algorithms
+  // function to get the code snippet for the selected algorithm
   const getAlgorithmCode = () => {
     switch (selectedAlgorithm) {
       case 'bubble':
@@ -16,16 +18,16 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n - i - 1; j++) {
       if (arr[j] > arr[j + 1]) {
-        // Swap elements
+        // swap elements
         [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
       }
     }
   }
   return arr;
 }`;
-      // Add other algorithm code snippets here
+      // add other algorithm code snippets here
       default:
-        return '// Select an algorithm to view its code';
+        return '// select an algorithm to view its code';
     }
   };
 
@@ -35,13 +37,15 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
       borderRadius: '16px',
       boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
       padding: '20px',
-      marginBottom: '20px'
+      marginBottom: '5px'
     }}>
+      {/* header with language selector and copy button */}
       <div className="code-header" style={{
         display: 'flex',
         justifyContent: 'space-between',
         marginBottom: '15px'
       }}>
+        {/* language selector buttons */}
         <div className="language-selector">
           <button
             onClick={() => setSelectedLanguage('javascript')}
@@ -73,6 +77,7 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
             Python
           </button>
         </div>
+        {/* copy code button */}
         <button style={{
           padding: '8px 16px',
           border: 'none',
@@ -84,6 +89,7 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
           Copy Code
         </button>
       </div>
+      {/* code display area with syntax highlighting */}
       <pre style={{
         background: '#f8fafc',
         padding: '20px',

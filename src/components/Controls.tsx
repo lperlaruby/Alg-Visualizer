@@ -1,115 +1,134 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
+// interface for the main controls component props
 interface ControlsProps {
     onGenerateArray: () => void;
     onStartSort: () => void;
+    onPauseSort?: () => void;
     onReset: () => void;
+    onFastForward?: () => void;
     isSorting: boolean;
+    isPaused?: boolean;
 }
+
+// interface for individual control button props
+interface ControlButtonProps {
+    onClick?: () => void;
+    disabled?: boolean;
+    children: ReactNode;
+    isMiddle?: boolean;
+}
+
+// play icon component for the start/pause button
+const PlayIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M8 5v14l11-7z"/>
+    </svg>
+);
+
+// pause icon component for when sorting is active
+const PauseIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+    </svg>
+);
+
+// rewind icon for reset functionality
+const RewindIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+    </svg>
+);
+
+// fast forward icon for speeding up the sort
+const FastForwardIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/>
+    </svg>
+);
+
+// reusable control button component with hover effects and disabled states
+const ControlButton = ({ onClick, disabled = false, children, isMiddle = false }: ControlButtonProps) => (
+    <button
+        onClick={() => onClick?.()}
+        disabled={disabled}
+        style={{
+            padding: '8px 16px',
+            background: 'transparent',
+            border: 'none',
+            // add border to middle buttons to separate them visually
+            borderRight: isMiddle ? '1px solid #ddd' : 'none',
+            cursor: disabled ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: disabled ? '#999' : '#333',
+            transition: 'all 0.2s ease',
+            opacity: disabled ? 0.5 : 1,
+        }}
+        onMouseEnter={(e) => {
+            // only show hover effect if button is not disabled
+            if (!disabled) {
+                e.currentTarget.style.background = '#e0e0e0';
+            }
+        }}
+        onMouseLeave={(e) => {
+            // reset background when mouse leaves
+            if (!disabled) {
+                e.currentTarget.style.background = 'transparent';
+            }
+        }}
+    >
+        {children}
+    </button>
+);
 
 export default function Controls({ 
     onGenerateArray, 
     onStartSort, 
+    onPauseSort,
     onReset, 
-    isSorting 
+    onFastForward,
+    isSorting,
+    isPaused = false
 }: ControlsProps) {
     return (
         <div style={{
             display: 'flex',
             gap: '12px',
             padding: '15px 20px',
-            background: '#fff',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            border: '1px solid #e9ecef',
-            marginBottom: '20px',
+            marginBottom: '-20px',
             justifyContent: 'space-between',
             alignItems: 'center'
         }}>
+            {/* left side - generate new array button */}
             <div style={{ display: 'flex', gap: '12px' }}>
                 <button
-                    onClick={onReset}
-                    disabled={isSorting}
-                    style={{
-                        padding: "8px 16px",
-                        background: "grey",
-                        color: "white",
-                        border: "none",
-                        borderRadius: 8,
-                        cursor: isSorting ? "not-allowed" : "pointer",
-                        opacity: isSorting ? 0.6 : 1,
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        transition: "all 0.2s ease",
-                        boxShadow: "0 2px 4px rgba(107, 114, 128, 0.2)"
-                    }}
-                    onMouseEnter={(e) => {
-                        if (!isSorting) {
-                            e.currentTarget.style.transform = "translateY(-1px)";
-                        }
-                    }}
-                    onMouseLeave={(e) => {
-                        if (!isSorting) {
-                            e.currentTarget.style.transform = "translateY(0)";
-                        }
-                    }}
-                >
-                    Reset
-                </button>
-                
-                <button
-                    onClick={onStartSort}
-                    disabled={isSorting}
-                    style={{
-                        padding: "8px 16px",
-                        background: "grey",
-                        color: "white",
-                        border: "none",
-                        borderRadius: 8,
-                        cursor: isSorting ? "not-allowed" : "pointer",
-                        opacity: isSorting ? 0.6 : 1,
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        transition: "all 0.2s ease",
-                        boxShadow: "0 2px 4px rgba(16, 185, 129, 0.2)"
-                    }}
-                    onMouseEnter={(e) => {
-                        if (!isSorting) {
-                            e.currentTarget.style.transform = "translateY(-1px)";
-                        }
-                    }}
-                    onMouseLeave={(e) => {
-                        if (!isSorting) {
-                            e.currentTarget.style.transform = "translateY(0)";
-                        }
-                    }}
-                >
-                    Start Sorting
-                </button>
-                
-                <button
                     onClick={onGenerateArray}
-                    disabled={isSorting}
+                    // disable when sorting unless paused
+                    disabled={isSorting && !isPaused}
                     style={{
                         padding: "8px 16px",
                         background: "grey",
                         color: "white",
                         border: "none",
                         borderRadius: 8,
-                        cursor: isSorting ? "not-allowed" : "pointer",
-                        opacity: isSorting ? 0.6 : 1,
+                        cursor: (isSorting && !isPaused) ? "not-allowed" : "pointer",
+                        opacity: (isSorting && !isPaused) ? 0.6 : 1,
                         fontWeight: "600",
                         fontSize: "14px",
                         transition: "all 0.2s ease",
                         boxShadow: "grey"
                     }}
                     onMouseEnter={(e) => {
-                        if (!isSorting) {
+                        // only show hover effect if button is enabled
+                        if (!isSorting || isPaused) {
                             e.currentTarget.style.transform = "translateY(-1px)";
                         }
                     }}
                     onMouseLeave={(e) => {
-                        if (!isSorting) {
+                        // reset transform when mouse leaves
+                        if (!isSorting || isPaused) {
                             e.currentTarget.style.transform = "translateY(0)";
                         }
                     }}
@@ -118,15 +137,35 @@ export default function Controls({
                 </button>
             </div>
 
+            {/* right side - control buttons in a pill-shaped container */}
             <div style={{
-                padding: '8px 16px',
-                borderRadius: '20px',
-                background: isSorting ? '#ffc107' : 'black',
-                color: isSorting ? '#000' : '#fff',
-                fontWeight: 'bold',
-                fontSize: '14px'
+                display: 'flex',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                border: '1px solid #ddd',
             }}>
-                {isSorting ? '🔄 Sorting...' : 'Ready'}
+                {/* reset button - disabled when not sorting and not paused */}
+                <ControlButton
+                    onClick={onReset}
+                    disabled={!isSorting && !isPaused}
+                    isMiddle={true}
+                >
+                    <RewindIcon />
+                </ControlButton>
+                {/* play/pause button - toggles between start and pause */}
+                <ControlButton
+                    onClick={isSorting && !isPaused ? onPauseSort : onStartSort}
+                    isMiddle={true}
+                >
+                    {isSorting && !isPaused ? <PauseIcon /> : <PlayIcon />}
+                </ControlButton>
+                {/* fast forward button - only enabled when sorting and not paused */}
+                <ControlButton
+                    onClick={onFastForward}
+                    disabled={!isSorting || isPaused}
+                >
+                    <FastForwardIcon />
+                </ControlButton>
             </div>
         </div>
     );

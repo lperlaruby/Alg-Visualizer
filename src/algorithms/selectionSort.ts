@@ -10,7 +10,7 @@ export function selectionSort(array: number[]): SortingStep[] {
     comparingIndices: [],
     swappingIndices: [],
     sortedIndices: [],
-    description: "Starting selection sort..."
+    description: "starting selection sort..."
   });
 
   const n = arr.length;
@@ -19,15 +19,15 @@ export function selectionSort(array: number[]): SortingStep[] {
   for (let i = 0; i < n - 1; i++) {
     let minIndex = i; // assume current position has the minimum
     
-    //findng the minimum element in unsorted portion - scan through remaining elements
+    // finding the minimum element in unsorted portion - scan through remaining elements
     for (let j = i + 1; j < n; j++) {
-      // Show comparison - highlight what we're comparing
+      // show comparison - highlight what we're comparing
       steps.push({
         array: [...arr],
         comparingIndices: [minIndex, j],
         swappingIndices: [],
         sortedIndices: Array.from({length: i}, (_, index) => index),
-        description: `Comparing ${arr[minIndex]} with ${arr[j]}`
+        description: `comparing ${arr[minIndex]} with ${arr[j]}`
       });
       
       // if we found a smaller element, update our minimum
@@ -44,7 +44,7 @@ export function selectionSort(array: number[]): SortingStep[] {
         comparingIndices: [],
         swappingIndices: [i, minIndex],
         sortedIndices: Array.from({length: i}, (_, index) => index),
-        description: `Swapping ${arr[i]} with minimum ${arr[minIndex]}`
+        description: `swapping ${arr[i]} with minimum ${arr[minIndex]}`
       });
       
       // do the actual swap
@@ -56,7 +56,7 @@ export function selectionSort(array: number[]): SortingStep[] {
         comparingIndices: [],
         swappingIndices: [],
         sortedIndices: Array.from({length: i + 1}, (_, index) => index),
-        description: `Moved ${arr[minIndex]} to position ${i}`
+        description: `moved ${arr[minIndex]} to position ${i}`
       });
     } else {
       // element is already in correct position - no swap needed
@@ -76,7 +76,7 @@ export function selectionSort(array: number[]): SortingStep[] {
     comparingIndices: [],
     swappingIndices: [],
     sortedIndices: Array.from({length: n}, (_, index) => index),
-    description: "Array is now sorted!"
+    description: "array is now sorted!"
   });
   
   return steps;

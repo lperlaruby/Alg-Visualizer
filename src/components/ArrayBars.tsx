@@ -1,3 +1,4 @@
+// interface for the array bars component - defines what props we need
 interface ArrayBarsProps {
     array: number[];
     comparingIndices?: number[];

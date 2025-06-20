@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
+/* css variables for theming - light mode colors */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
+/* theme configuration for tailwind - maps our variables to tailwind */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,6 +14,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* dark mode support - changes colors when user prefers dark theme */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -19,6 +22,7 @@
   }
 }
 
+/* base body styles - sets up the default appearance */
 body {
   background: var(--background);
   color: var(--foreground);
