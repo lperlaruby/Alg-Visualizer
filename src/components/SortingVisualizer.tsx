@@ -1,3 +1,4 @@
+import React from 'react';
 import ArrayBars from './ArrayBars';
 import { useResponsive } from '@/utils/useResponsive';
 
@@ -12,7 +13,7 @@ interface SortingVisualizerProps {
     description?: string;
 }
 
-export default function SortingVisualizer({ 
+const SortingVisualizer = React.memo<SortingVisualizerProps>(({ 
     array, 
     isSorting, 
     selectedAlgorithm,
@@ -20,7 +21,7 @@ export default function SortingVisualizer({
     swappingIndices = [],
     sortedIndices = [],
     description = ""
-}: SortingVisualizerProps) {
+}) => {
     // Get responsive utilities
     const { isMobile } = useResponsive();
     
@@ -58,4 +59,8 @@ export default function SortingVisualizer({
             </div>
         </div>
     );
-}
+});
+
+SortingVisualizer.displayName = 'SortingVisualizer';
+
+export default SortingVisualizer;

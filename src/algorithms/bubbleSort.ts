@@ -1,73 +1,67 @@
-// bubble sort algorithm - the classic simple sorting method
-export interface SortingStep {
-    array: number[];
-    comparingIndices: number[];
-    swappingIndices: number[];
-    sortedIndices: number[];
-    description: string;
+// bubble sort algorithm - efficient implementation with delta changes
+import { SortingStep } from '@/types';
+
+export function reconstructArrayAtStep(initialArray: number[], steps: SortingStep[], stepIndex: number): number[] {
+    const result = [...initialArray];
+    for (let i = 0; i <= stepIndex; i++) {
+        steps[i].arrayChanges?.forEach(change => {
+            result[change.index] = change.value;
+        });
+    }
+    return result;
 }
 
 export function bubbleSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
-    const arr = [...array]; // making a copy to avoid mutating original array
+    const arr = [...array];
     
-    // the initial step - show the starting state
     steps.push({
-        array: [...arr],
         comparingIndices: [],
         swappingIndices: [],
         sortedIndices: [],
-        description: "starting bubble sort..."
+        description: "Starting bubble sort..."
     });
 
     const n = arr.length;
     
-    // outer loop to number of passes - each pass puts the largest element in place
     for (let i = 0; i < n - 1; i++) {
-        // inner loop to compare adjacent elements - bubble up the largest value
         for (let j = 0; j < n - i - 1; j++) {
-            // shows which elements is being comparing - highlight the current pair
             steps.push({
-                array: [...arr],
                 comparingIndices: [j, j + 1],
                 swappingIndices: [],
-                sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index), // elements from end are sorted
-                description: `comparing elements at positions ${j} and ${j + 1}`
+                sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index),
+                description: `Comparing elements at positions ${j} and ${j + 1}`
             });
 
-            // if need to swap, show the swap - only swap if left is bigger than right
             if (arr[j] > arr[j + 1]) {
-                // show swapping state - highlight the elements being swapped
                 steps.push({
-                    array: [...arr],
                     comparingIndices: [],
                     swappingIndices: [j, j + 1],
                     sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index),
-                    description: `swapping ${arr[j]} and ${arr[j + 1]}`
+                    description: `Swapping ${arr[j]} and ${arr[j + 1]}`
                 });
 
-                // swap the elements - the actual swap operation
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
 
-                // show result after swap - display the new state
                 steps.push({
-                    array: [...arr],
+                    arrayChanges: [
+                        { index: j, value: arr[j] },
+                        { index: j + 1, value: arr[j + 1] }
+                    ],
                     comparingIndices: [],
                     swappingIndices: [],
                     sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index),
-                    description: `swapped ${arr[j + 1]} and ${arr[j]}`
+                    description: `Swapped elements`
                 });
             }
         }
     }
 
-    // final step showing sorted array - we're done!
     steps.push({
-        array: [...arr],
         comparingIndices: [],
         swappingIndices: [],
-        sortedIndices: Array.from({length: n}, (_, index) => index), // all elements are sorted
-        description: "array is now sorted!"
+        sortedIndices: Array.from({length: n}, (_, index) => index),
+        description: "Array is now sorted!"
     });
 
     return steps;

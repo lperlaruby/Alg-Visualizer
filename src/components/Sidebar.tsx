@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useResponsive } from '@/utils/useResponsive';
 
 // interface for the sidebar component props - defines what callbacks we need
@@ -24,11 +24,9 @@ export default function Sidebar({
     onSpeedChange,
     isSorting,
 }: SidebarProps) {
-    // local state for controls - keep track of what user has selected
     const [selectedAlgorithm, setSelectedAlgorithm] = useState('bubble');
     const [arraySize, setArraySize] = useState(20);
     const [speed, setSpeed] = useState(50);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [algorithmsOpen, setAlgorithmsOpen] = useState(true);
 
     // Get responsive utilities
@@ -36,19 +34,18 @@ export default function Sidebar({
 
     // handlers for controls - these update local state and call parent functions
     const handleAlgorithmChange = (algorithmId: string) => {
-        setSelectedAlgorithm(algorithmId); // update local state
-        onAlgorithmChange(algorithmId); // call parent handler
-        setIsDropdownOpen(false); // close dropdown after selection
+        setSelectedAlgorithm(algorithmId);
+        onAlgorithmChange(algorithmId);
     };
 
     const handleArraySizeChange = (size: number) => {
-        setArraySize(size); // update local state
-        onArraySizeChange(size); // call parent handler
+        setArraySize(size);
+        onArraySizeChange(size);
     };
 
     const handleSpeedChange = (speed: number) => {
-        setSpeed(speed); // update local state
-        onSpeedChange(speed); // call parent handler
+        setSpeed(speed);
+        onSpeedChange(speed);
     };
 
     // find the currently selected algorithm data for display
@@ -99,7 +96,7 @@ export default function Sidebar({
                     transform: algorithmsOpen ? "rotate(180deg)" : "rotate(90deg)",
                     color: "#64748b"
                 }}>
-                    ^
+                    ▼
                 </span>
             </button>
             {algorithmsOpen && (
@@ -185,19 +182,23 @@ export default function Sidebar({
             <h4 style={{ marginBottom: 8, color: "#333", fontSize: "14px", fontWeight: "600" }}>Legend</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 18, height: 18, background: "#10b981", borderRadius: 4, boxShadow: "none" }}></div>
+                    <div style={{ width: 18, height: 18, background: "#34d399", borderRadius: 4, boxShadow: "none" }}></div>
                     <span style={{ fontSize: 13, color: "#374151", fontWeight: "500" }}>Sorted</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 18, height: 18, background: "#f59e0b", borderRadius: 4, boxShadow: "none" }}></div>
+                    <div style={{ width: 18, height: 18, background: "#fbbf24", borderRadius: 4, boxShadow: "none" }}></div>
                     <span style={{ fontSize: 13, color: "#374151", fontWeight: "500" }}>Comparing</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 18, height: 18, background: "#3b82f6", borderRadius: 4, boxShadow: "none" }}></div>
+                    <div style={{ width: 18, height: 18, background: "#f87171", borderRadius: 4, boxShadow: "none" }}></div>
+                    <span style={{ fontSize: 13, color: "#374151", fontWeight: "500" }}>Swapping</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 18, height: 18, background: "#9ca3af", borderRadius: 4, boxShadow: "none" }}></div>
                     <span style={{ fontSize: 13, color: "#374151", fontWeight: "500" }}>Unsorted</span>
                 </div>
             </div>
         </div>
     </aside>
-);
+    );
 }

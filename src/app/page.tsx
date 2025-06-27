@@ -1,10 +1,11 @@
 "use client" // this is a client component
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import SortingVisualizer from "@/components/SortingVisualizer";
 import Header from "@/components/Header";
-import { bubbleSort, SortingStep } from '@/algorithms/bubbleSort';
+import { bubbleSort, reconstructArrayAtStep } from '@/algorithms/bubbleSort';
+import { SortingStep, AlgorithmType } from '@/types';
 import { selectionSort } from '@/algorithms/selectionSort';
 import { insertionSort } from '@/algorithms/insertionSort';
 import { mergeSort } from '@/algorithms/mergeSort';
@@ -13,183 +14,162 @@ import CodeDisplay from "@/components/CodeDisplay";
 import Controls from "@/components/Controls";
 import { useResponsive } from '@/utils/useResponsive';
 
+const algorithmMap = {
+    bubble: bubbleSort,
+    selection: selectionSort,
+    insertion: insertionSort,
+    merge: mergeSort,
+    quick: quickSort
+} as const;
+
 export default function HomePage() {
-  // all the state we need to track everything
-  const [array, setArray] = useState<number[]>([]);
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState("bubble");
-  const [arraySize, setArraySize] = useState(20);
-  const [speed, setSpeed] = useState(50);
-  const [isSorting, setIsSorting] = useState(false);
+    const [array, setArray] = useState<number[]>([]);
+    const [selectedAlgorithm, setSelectedAlgorithm] = useState<AlgorithmType>("bubble");
+    const [arraySize, setArraySize] = useState(20);
+    const [speed, setSpeed] = useState(50);
+    const [isSorting, setIsSorting] = useState(false);
 
-  // add new state for visualization - need to track what's happening at each step
-  const [comparingIndices, setComparingIndices] = useState<number[]>([]);
-  const [swappingIndices, setSwappingIndices] = useState<number[]>([]);
-  const [sortedIndices, setSortedIndices] = useState<number[]>([]);
-  const [description, setDescription] = useState<string>("");
+    // Batched visualization state
+    const [visualizationState, setVisualizationState] = useState({
+        comparingIndices: [] as number[],
+        swappingIndices: [] as number[],
+        sortedIndices: [] as number[],
+        description: ""
+    });
 
-  // add new state for managing steps - this will hold all the animation frames
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [sortingSteps, setSortingSteps] = useState<SortingStep[]>([]);
+    const [currentStepIndex, setCurrentStepIndex] = useState(0);
+    const [sortingSteps, setSortingSteps] = useState<SortingStep[]>([]);
+    const [isPaused, setIsPaused] = useState(false);
+    const [animationSpeed, setAnimationSpeed] = useState(1);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [displayMode, setDisplayMode] = useState<'code' | 'explanation'>('code');
 
-  const [isPaused, setIsPaused] = useState(false);
-  const [animationSpeed, setAnimationSpeed] = useState(1);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const { isMobile } = useResponsive();
 
-  // add state for code display mode - tracks whether to show explanation or code
-  const [displayMode, setDisplayMode] = useState<'code' | 'explanation'>('code');
+    // Memoized current array reconstruction
+    const currentArray = useMemo(() => {
+        if (sortingSteps.length === 0) return array;
+        return reconstructArrayAtStep(array, sortingSteps, currentStepIndex);
+    }, [array, sortingSteps, currentStepIndex]);
 
-  // Get responsive utilities
-  const { isMobile } = useResponsive();
+    const generateNewArray = useCallback(() => {
+        const newArray = Array.from({ length: arraySize }, () => 
+            Math.floor(Math.random() * 100) + 1
+        );
+        setArray(newArray);
+        setCurrentStepIndex(0);
+        setSortingSteps([]);
+        setVisualizationState({
+            comparingIndices: [],
+            swappingIndices: [],
+            sortedIndices: [],
+            description: ""
+        });
+    }, [arraySize]);
 
-  // function to generate new array - creates random numbers
-  const generateNewArray = useCallback(() => {
-    const newArray = Array.from({ length: arraySize }, () => 
-      Math.floor(Math.random() * 100) + 1
-    );
-    setArray(newArray);
-    setCurrentStepIndex(0);
-    setSortingSteps([]);
-    setComparingIndices([]);
-    setSwappingIndices([]);
-    setSortedIndices([]);
-    setDescription("");
-  }, [arraySize]);
-
-  // function to handle algorithm change - user picked a different sorting method
-  const handleAlgorithmChange = useCallback((algorithm: string) => {
-    console.log("Algorithm changed to:", algorithm);
-    setSelectedAlgorithm(algorithm);
-  }, []);
-  
-  // function to handle array size change - user wants bigger/smaller array
-  const handleArraySizeChange = useCallback((size: number) => {
-    setArraySize(size);
-    generateNewArray();
-  }, [generateNewArray]);
-  
-  // function to handle speed change - user wants faster/slower animation
-  const handleSpeedChange = useCallback((newSpeed: number) => {
-    setSpeed(newSpeed);
-  }, []);
-  
-  // function to handle the generate array button - user clicked the button
-  const handleGenerateArray = useCallback(() => {
-    generateNewArray();
-  }, [generateNewArray]);
-
-  // function to handle the start sort button - this is where the magic happens
-  const handleStartSort = useCallback(() => {
-    if (isPaused) {
-      setIsPaused(false);
-      return;
-    }
-
-    console.log('Starting sort with algorithm:', selectedAlgorithm);
-    setIsSorting(true);
-    setCurrentStepIndex(0);
-    setAnimationSpeed(1);
+    const handleAlgorithmChange = useCallback((algorithm: string) => {
+        setSelectedAlgorithm(algorithm as AlgorithmType);
+    }, []);
     
-    let steps: SortingStep[] = [];
+    const handleArraySizeChange = useCallback((size: number) => {
+        setArraySize(size);
+        generateNewArray();
+    }, [generateNewArray]);
     
-    // figure out which algorithm to run based on what user selected
-    switch (selectedAlgorithm) {
-        case 'bubble':
-            steps = bubbleSort(array);
-            break;
-        case 'selection':
-            steps = selectionSort(array);
-            break;
-        case 'insertion':
-            steps = insertionSort(array);
-            break;
-        case 'merge':
-            steps = mergeSort(array);
-            break;
-        case 'quick':
-            steps = quickSort(array);
-            break;
-        default:
-            steps = bubbleSort(array); // fallback to bubble sort
-    }
+    const handleSpeedChange = useCallback((newSpeed: number) => {
+        setSpeed(newSpeed);
+    }, []);
     
-    setSortingSteps(steps);
-  }, [selectedAlgorithm, array, isPaused]);
+    const handleGenerateArray = useCallback(() => {
+        generateNewArray();
+    }, [generateNewArray]);
 
-  // function to handle pause
-  const handlePause = useCallback(() => {
-    setIsPaused(true);
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  }, []);
+    const handleStartSort = useCallback(() => {
+        if (isPaused) {
+            setIsPaused(false);
+            return;
+        }
 
-  // function to handle fast forward
-  const handleFastForward = useCallback(() => {
-    setAnimationSpeed(prev => Math.min(prev * 2, 8));
-  }, []);
+        setIsSorting(true);
+        setCurrentStepIndex(0);
+        setAnimationSpeed(1);
+        
+        const steps = algorithmMap[selectedAlgorithm](array);
+        setSortingSteps(steps);
+    }, [selectedAlgorithm, array, isPaused]);
 
-  // function to handle the reset button - clear everything and start fresh
-  const handleReset = useCallback(() => {
-    console.log('Resetting...');
-    setIsSorting(false);
-    setIsPaused(false);
-    setAnimationSpeed(1);
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setCurrentStepIndex(0);
-    setSortingSteps([]);
-    setComparingIndices([]);
-    setSwappingIndices([]);
-    setSortedIndices([]);
-    setDescription("");
-    generateNewArray();
-  }, [generateNewArray]);
+    const handlePause = useCallback(() => {
+        setIsPaused(true);
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+    }, []);
 
-  // handlers for explanation/code buttons
-  const handleShowExplanation = useCallback(() => {
-    setDisplayMode('explanation');
-  }, []);
+    const handleFastForward = useCallback(() => {
+        setAnimationSpeed(prev => Math.min(prev * 2, 8));
+    }, []);
 
-  const handleShowCode = useCallback(() => {
-    setDisplayMode('code');
-  }, []);
+    const handleReset = useCallback(() => {
+        setIsSorting(false);
+        setIsPaused(false);
+        setAnimationSpeed(1);
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        setCurrentStepIndex(0);
+        setSortingSteps([]);
+        setVisualizationState({
+            comparingIndices: [],
+            swappingIndices: [],
+            sortedIndices: [],
+            description: ""
+        });
+        generateNewArray();
+    }, [generateNewArray]);
 
-  // initial array when component mounts - gotta have something to look at
-  useEffect(() => {
-    generateNewArray();
-  }, []);
+    const handleShowExplanation = useCallback(() => {
+        setDisplayMode('explanation');
+    }, []);
 
-  // add useEffect to update visualization based on current step - this updates the colors and text
-  useEffect(() => {
-    if (sortingSteps.length > 0 && currentStepIndex < sortingSteps.length) {
-        const currentStep = sortingSteps[currentStepIndex];
-        setComparingIndices(currentStep.comparingIndices);
-        setSwappingIndices(currentStep.swappingIndices);
-        setSortedIndices(currentStep.sortedIndices);
-        setDescription(currentStep.description);
-    }
-  }, [currentStepIndex, sortingSteps]);
+    const handleShowCode = useCallback(() => {
+        setDisplayMode('code');
+    }, []);
 
-  // animation effect - this controls the timing of each step
-  useEffect(() => {
-    if (sortingSteps.length > 0 && currentStepIndex < sortingSteps.length - 1 && isSorting && !isPaused) {
-      timeoutRef.current = setTimeout(() => {
-        setCurrentStepIndex(prev => prev + 1);
-      }, 2000 / (speed * animationSpeed));
-    } else if (currentStepIndex >= sortingSteps.length - 1 && isSorting) {
-      // we're done sorting, reset everything
-      setIsSorting(false);
-      setIsPaused(false);
-      setAnimationSpeed(1);
-    }
+    useEffect(() => {
+        generateNewArray();
+    }, []);
 
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [currentStepIndex, sortingSteps, isSorting, isPaused, speed, animationSpeed]);
+    // Batched visualization state updates
+    useEffect(() => {
+        if (sortingSteps.length > 0 && currentStepIndex < sortingSteps.length) {
+            const currentStep = sortingSteps[currentStepIndex];
+            setVisualizationState({
+                comparingIndices: currentStep.comparingIndices,
+                swappingIndices: currentStep.swappingIndices,
+                sortedIndices: currentStep.sortedIndices,
+                description: currentStep.description
+            });
+        }
+    }, [currentStepIndex, sortingSteps]);
+
+    // Optimized animation timing
+    useEffect(() => {
+        if (sortingSteps.length > 0 && currentStepIndex < sortingSteps.length - 1 && isSorting && !isPaused) {
+            timeoutRef.current = setTimeout(() => {
+                setCurrentStepIndex(prev => prev + 1);
+            }, 2000 / (speed * animationSpeed));
+        } else if (currentStepIndex >= sortingSteps.length - 1 && isSorting) {
+            setIsSorting(false);
+            setIsPaused(false);
+            setAnimationSpeed(1);
+        }
+
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, [currentStepIndex, sortingSteps, isSorting, isPaused, speed, animationSpeed]);
 
     return (
        <div style={{ 
@@ -275,13 +255,13 @@ export default function HomePage() {
             }}>
               {/* the main sorting visualization component */}
               <SortingVisualizer 
-                array={sortingSteps[currentStepIndex]?.array || array}
+                array={currentArray}
                 isSorting={isSorting}
                 selectedAlgorithm={selectedAlgorithm}
-                comparingIndices={comparingIndices}
-                swappingIndices={swappingIndices}
-                sortedIndices={sortedIndices}
-                description={description}
+                comparingIndices={visualizationState.comparingIndices}
+                swappingIndices={visualizationState.swappingIndices}
+                sortedIndices={visualizationState.sortedIndices}
+                description={visualizationState.description}
               />
             </div>
           </main>

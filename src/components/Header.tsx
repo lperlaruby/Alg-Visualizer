@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Header: React.FC = () => {
+  const [visualizationState, setVisualizationState] = useState({
+    comparingIndices: [],
+    swappingIndices: [],
+    sortedIndices: [],
+    description: ""
+  });
+
   return (
     <header className="bg-white text-black">
       <div className="container mx-auto px-2 py-4" style={{
