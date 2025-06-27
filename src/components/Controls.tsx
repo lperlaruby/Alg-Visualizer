@@ -122,8 +122,7 @@ export default function Controls({
         <div style={{
             display: 'flex',
             gap: '12px',
-            padding: isMobile ? '10px 15px' : '15px 20px',
-            marginBottom: '-20px',
+            padding: isMobile ? '20px 20px 0px 4px' : '24px 24px 0px 2px',
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap', // Allow wrapping on small screens
@@ -192,13 +191,17 @@ export default function Controls({
                 </button>
             </div>
 
+            {/* spacer - pushes right buttons further right */}
+            <div style={{ flex: 1 }}></div>
+
             {/* right side - control buttons in a pill-shaped container */}
             <div style={{
                 display: 'flex',
                 borderRadius: '8px',
                 overflow: 'hidden',
                 border: '1px solid #ddd',
-                flexShrink: 0, // Prevent controls from shrinking
+                flexShrink: 0,
+                marginRight: isMobile ? '12px' : '-20px',
             }}>
                 {/* reset button - disabled when not sorting and not paused */}
                 <ControlButton

@@ -221,7 +221,7 @@ export default function HomePage() {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            gap: isMobile ? '15px' : '30px',
+            gap: isMobile ? '20px' : '24px',
             minWidth: 0,
             overflow: 'hidden',
             minHeight: 'fit-content',
@@ -241,29 +241,16 @@ export default function HomePage() {
             />
             {/* code display showing the current algorithm */}
             <CodeDisplay selectedAlgorithm={selectedAlgorithm} displayMode={displayMode} />
-            {/* container for the sorting visualizer */}
-            <div style={{
-              background: '#fff',
-              borderRadius: 16,
-              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              flex: 1,
-              minWidth: 0,
-              minHeight: '400px',
-            }}>
-              {/* the main sorting visualization component */}
-              <SortingVisualizer 
-                array={currentArray}
-                isSorting={isSorting}
-                selectedAlgorithm={selectedAlgorithm}
-                comparingIndices={visualizationState.comparingIndices}
-                swappingIndices={visualizationState.swappingIndices}
-                sortedIndices={visualizationState.sortedIndices}
-                description={visualizationState.description}
-              />
-            </div>
+            {/* the main sorting visualization component */}
+            <SortingVisualizer 
+              array={currentArray}
+              isSorting={isSorting}
+              selectedAlgorithm={selectedAlgorithm}
+              comparingIndices={visualizationState.comparingIndices}
+              swappingIndices={visualizationState.swappingIndices}
+              sortedIndices={visualizationState.sortedIndices}
+              description={visualizationState.description}
+            />
           </main>
         </div>
        </div>

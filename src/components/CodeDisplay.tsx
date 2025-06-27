@@ -39,7 +39,6 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
       border: '1px solid #e5e7eb',
       borderRadius: '12px',
       padding: isMobile ? '4px' : '8px',
-      marginBottom: '10px',
       minWidth: 0,
       boxShadow: '0 1px 2px 0 rgba(0,0,0,0.01)',
     }}>
