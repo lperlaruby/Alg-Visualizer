@@ -33,6 +33,9 @@ export default function SortingVisualizer({
             gap: isMobile ? '15px' : '20px',
             minWidth: 0,
             overflow: 'hidden',
+            border: '2px solid #e5e7eb',
+            borderRadius: '12px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         }}>
 
             {/* visualization area - this is where the bars are shown */}
@@ -43,6 +46,7 @@ export default function SortingVisualizer({
                 gap: isMobile ? '15px' : '20px',
                 minWidth: 0,
                 overflow: 'hidden',
+                padding: '16px',
             }}>
                 {/* the main array bars component that shows the actual visualization */}
                 <ArrayBars 

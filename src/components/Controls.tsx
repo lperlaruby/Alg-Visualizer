@@ -8,8 +8,11 @@ interface ControlsProps {
     onPauseSort?: () => void;
     onReset: () => void;
     onFastForward?: () => void;
+    onShowExplanation: () => void;
+    onShowCode: () => void;
     isSorting: boolean;
     isPaused?: boolean;
+    displayMode: 'code' | 'explanation';
 }
 
 // interface for individual control button props
@@ -18,6 +21,7 @@ interface ControlButtonProps {
     disabled?: boolean;
     children: ReactNode;
     isMiddle?: boolean;
+    isActive?: boolean;
 }
 
 // play icon component for the start/pause button
@@ -48,8 +52,22 @@ const FastForwardIcon = () => (
     </svg>
 );
 
+// explanation icon for the explanation section
+const ExplanationIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+    </svg>
+);
+
+// code icon for the code section
+const CodeIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+    </svg>
+);
+
 // reusable control button component with hover effects and disabled states
-const ControlButton = ({ onClick, disabled = false, children, isMiddle = false }: ControlButtonProps) => (
+const ControlButton = ({ onClick, disabled = false, children, isMiddle = false, isActive = false }: ControlButtonProps) => (
     <button
         onClick={() => onClick?.()}
         disabled={disabled}
@@ -66,6 +84,7 @@ const ControlButton = ({ onClick, disabled = false, children, isMiddle = false }
             color: disabled ? '#999' : '#333',
             transition: 'all 0.2s ease',
             opacity: disabled ? 0.5 : 1,
+            backgroundColor: isActive ? '#e0e0e0' : 'transparent',
         }}
         onMouseEnter={(e) => {
             // only show hover effect if button is not disabled
@@ -90,8 +109,11 @@ export default function Controls({
     onPauseSort,
     onReset, 
     onFastForward,
+    onShowExplanation,
+    onShowCode,
     isSorting,
-    isPaused = false
+    isPaused = false,
+    displayMode
 }: ControlsProps) {
     // Get responsive utilities
     const { isMobile } = useResponsive();
@@ -113,34 +135,56 @@ export default function Controls({
                 gap: '12px',
                 flexShrink: 0, // Prevent button from shrinking
             }}>
+                {/* explanation/code button */}
+                <div style={{
+                    display: 'flex',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    border: '1px solid #ddd',
+                    flexShrink: 0,
+                }}>
+                    <ControlButton
+                        onClick={onShowExplanation}
+                        isMiddle={true}
+                        isActive={displayMode === 'explanation'}
+                    >
+                        <ExplanationIcon />
+                    </ControlButton>
+                    <ControlButton
+                        onClick={onShowCode}
+                        isActive={displayMode === 'code'}
+                    >
+                        <CodeIcon />
+                    </ControlButton>
+                </div>
+
                 <button
                     onClick={onGenerateArray}
                     // disable when sorting unless paused
                     disabled={isSorting && !isPaused}
                     style={{
                         padding: "8px 16px",
-                        background: "grey",
-                        color: "white",
-                        border: "none",
+                        background: "transparent",
+                        color: (isSorting && !isPaused) ? "#999" : "#333",
+                        border: "1px solid #ddd",
                         borderRadius: 8,
                         cursor: (isSorting && !isPaused) ? "not-allowed" : "pointer",
-                        opacity: (isSorting && !isPaused) ? 0.6 : 1,
+                        opacity: (isSorting && !isPaused) ? 0.5 : 1,
                         fontWeight: "600",
                         fontSize: "14px",
                         transition: "all 0.2s ease",
-                        boxShadow: "grey",
                         whiteSpace: "nowrap", // Prevent text wrapping
                     }}
                     onMouseEnter={(e) => {
                         // only show hover effect if button is enabled
                         if (!isSorting || isPaused) {
-                            e.currentTarget.style.transform = "translateY(-1px)";
+                            e.currentTarget.style.background = "#e0e0e0";
                         }
                     }}
                     onMouseLeave={(e) => {
-                        // reset transform when mouse leaves
+                        // reset background when mouse leaves
                         if (!isSorting || isPaused) {
-                            e.currentTarget.style.transform = "translateY(0)";
+                            e.currentTarget.style.background = "transparent";
                         }
                     }}
                 >

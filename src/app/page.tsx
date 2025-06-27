@@ -35,6 +35,9 @@ export default function HomePage() {
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // add state for code display mode - tracks whether to show explanation or code
+  const [displayMode, setDisplayMode] = useState<'code' | 'explanation'>('code');
+
   // Get responsive utilities
   const { isMobile } = useResponsive();
 
@@ -143,6 +146,15 @@ export default function HomePage() {
     generateNewArray();
   }, [generateNewArray]);
 
+  // handlers for explanation/code buttons
+  const handleShowExplanation = useCallback(() => {
+    setDisplayMode('explanation');
+  }, []);
+
+  const handleShowCode = useCallback(() => {
+    setDisplayMode('code');
+  }, []);
+
   // initial array when component mounts - gotta have something to look at
   useEffect(() => {
     generateNewArray();
@@ -184,7 +196,7 @@ export default function HomePage() {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: '#f7f7f7', // light background    
+        background: '#fff', // White background to match header
        }}>
         <Header />
         <div style={{ 
@@ -192,25 +204,47 @@ export default function HomePage() {
           flex: 1,
           padding: isMobile ? '10px' : '20px',
           gap: isMobile ? '10px' : '20px',
-          minWidth: 0, // Add this to prevent flex items from overflowing
-          flexWrap: 'wrap', // Allow wrapping on very small screens
+          minWidth: 0,
+          flexWrap: 'wrap',
+          borderTop: '1.5px solid #d1d5db', // Darker line below header
         }}>
-          {/* sidebar with algorithm selection and settings */}
-          <Sidebar
-              onAlgorithmChange={handleAlgorithmChange}
-              onArraySizeChange={handleArraySizeChange}
-              onSpeedChange={handleSpeedChange}
-              isSorting={isSorting}
-          />
+          {/* Sidebar wrapper with full-height border */}
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            position: 'relative',
+            minHeight: '0', 
+            minWidth: '0',
+            marginTop: '-20px', // Extend to touch header border
+            paddingTop: '20px', // Compensate for the negative margin
+          }}>
+            {/* Full-height border line */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: '1.5px',
+              height: '100%',
+              background: '#d1d5db',
+              zIndex: 1,
+            }} />
+            
+            <Sidebar
+                onAlgorithmChange={handleAlgorithmChange}
+                onArraySizeChange={handleArraySizeChange}
+                onSpeedChange={handleSpeedChange}
+                isSorting={isSorting}
+            />
+          </div>
           {/* main content area */}
           <main style={{
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
             gap: isMobile ? '15px' : '30px',
-            minWidth: 0, // Add this to prevent flex items from overflowing
-            overflow: 'hidden', // Add this to prevent content from breaking layout
-            minHeight: 'fit-content', // Ensure it takes at least the content height
+            minWidth: 0,
+            overflow: 'hidden',
+            minHeight: 'fit-content',
           }}>
             {/* control buttons for the visualization */}
             <Controls 
@@ -219,11 +253,14 @@ export default function HomePage() {
                 onPauseSort={handlePause}
                 onReset={handleReset}
                 onFastForward={handleFastForward}
+                onShowExplanation={handleShowExplanation}
+                onShowCode={handleShowCode}
                 isSorting={isSorting}
                 isPaused={isPaused}
+                displayMode={displayMode}
             />
             {/* code display showing the current algorithm */}
-            <CodeDisplay selectedAlgorithm={selectedAlgorithm} />
+            <CodeDisplay selectedAlgorithm={selectedAlgorithm} displayMode={displayMode} />
             {/* container for the sorting visualizer */}
             <div style={{
               background: '#fff',
@@ -233,8 +270,8 @@ export default function HomePage() {
               flexDirection: 'column',
               overflow: 'hidden',
               flex: 1,
-              minWidth: 0, // Add this to prevent flex items from overflowing
-              minHeight: '400px', // Minimum height to ensure visualization is visible
+              minWidth: 0,
+              minHeight: '400px',
             }}>
               {/* the main sorting visualization component */}
               <SortingVisualizer 

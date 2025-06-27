@@ -1,125 +1,161 @@
 import React, { useState } from 'react';
 import { useResponsive } from '@/utils/useResponsive';
+import { getAlgorithmCode } from '@/utils/algorithmCode';
+import { getAlgorithmExplanation } from '@/utils/algorithmExplanations';
 
 // interface for the code display component props
 interface CodeDisplayProps {
   selectedAlgorithm: string;
+  displayMode: 'code' | 'explanation';
 }
 
-const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
-  // state to track which programming language is selected
-  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
+const MAX_CODE_LINES = 14; // Number of lines before 'Show more' appears
 
-  // Get responsive utilities
+const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMode }) => {
+  const [selectedLanguage] = useState('typescript');
+  const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { isMobile } = useResponsive();
 
-  // function to get the code snippet for the selected algorithm
-  const getAlgorithmCode = () => {
-    switch (selectedAlgorithm) {
-      case 'bubble':
-        return `function bubbleSort(arr) {
-  const n = arr.length;
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n - i - 1; j++) {
-      if (arr[j] > arr[j + 1]) {
-        // swap elements
-        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-      }
-    }
-  }
-  return arr;
-}`;
-      // add other algorithm code snippets here
-      default:
-        return '// select an algorithm to view its code';
-    }
+
+
+    const code = getAlgorithmCode(selectedAlgorithm);
+  const explanation = getAlgorithmExplanation(selectedAlgorithm);
+  const content = displayMode === 'code' ? code : explanation;
+  const contentLines = content.split('\n');
+  const showShowMore = contentLines.length > MAX_CODE_LINES;
+  const displayedContent = expanded || !showShowMore ? content : contentLines.slice(0, MAX_CODE_LINES).join('\n') + '\n...';
+
+  // Copy content to clipboard with feedback
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="code-display" style={{
-      background: '#fff',
-      borderRadius: '16px',
-      boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-      padding: isMobile ? '15px' : '20px',
-      marginBottom: '5px',
-      minWidth: 0, // Prevent overflow
-      overflow: 'hidden', // Prevent content from breaking layout
+    <div style={{
+      background: '#f3f4f6',
+      border: '1px solid #e5e7eb',
+      borderRadius: '12px',
+      padding: isMobile ? '4px' : '8px',
+      marginBottom: '10px',
+      minWidth: 0,
+      boxShadow: '0 1px 2px 0 rgba(0,0,0,0.01)',
     }}>
-      {/* header with language selector and copy button */}
-      <div className="code-header" style={{
+      {/* Tabs and Copy button row */}
+      <div style={{
         display: 'flex',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '15px',
-        flexWrap: 'wrap', // Allow wrapping on small screens
-        gap: '10px', // Add gap for wrapped items
+        marginBottom: '6px',
+        paddingBottom: '0',
       }}>
-        {/* language selector buttons */}
-        <div className="language-selector" style={{
-          display: 'flex',
-          flexWrap: 'wrap', // Allow wrapping on small screens
-          gap: '8px', // Add gap between buttons
-        }}>
+        {/* Flat tab */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
           <button
-            onClick={() => setSelectedLanguage('javascript')}
-            className={selectedLanguage === 'javascript' ? 'active' : ''}
             style={{
-              padding: '8px 16px',
+              background: 'none',
               border: 'none',
-              borderRadius: '4px',
-              background: selectedLanguage === 'javascript' ? '#e2e8f0' : 'transparent',
-              cursor: 'pointer',
-              color: '#888888',
-              whiteSpace: 'nowrap', // Prevent text wrapping
+              color: '#222',
+              fontWeight: 700,
+              fontSize: '15px',
+              padding: '10px 18px 8px 18px',
+              marginRight: '8px',
+              outline: 'none',
+              cursor: 'default',
+              boxShadow: 'none',
+              borderRadius: 0,
+              fontFamily: 'inherit',
             }}
+            tabIndex={-1}
+            disabled
           >
-            JavaScript
-          </button>
-          <button
-            onClick={() => setSelectedLanguage('python')}
-            className={selectedLanguage === 'python' ? 'active' : ''}
-            style={{
-              padding: '8px 16px',
-              border: 'none',
-              borderRadius: '4px',
-              background: selectedLanguage === 'python' ? '#e2e8f0' : 'transparent',
-              cursor: 'pointer',
-              color: '#888888',
-              whiteSpace: 'nowrap', // Prevent text wrapping
-            }}
-          >
-            Python
+            {displayMode === 'code' ? 'TypeScript' : 'Explanation'}
           </button>
         </div>
-        {/* copy code button */}
-        <button style={{
-          padding: '8px 16px',
-          border: 'none',
-          borderRadius: '4px',
-          background: '#f1f5f9',
-          cursor: 'pointer',
-          color: '#888888',
-          whiteSpace: 'nowrap', // Prevent text wrapping
-        }}>
-          Copy Code
+        {/* Copy button */}
+        <button
+          onClick={handleCopy}
+          title={copied ? 'Copied!' : `Copy ${displayMode}`}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: copied ? '#374151' : '#9ca3af',
+            cursor: 'pointer',
+            padding: '4px',
+            marginRight: '2px',
+            marginTop: '2px',
+            fontSize: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            transition: 'color 0.15s',
+            minWidth: '48px',
+            minHeight: '28px',
+            position: 'relative',
+          }}
+          onMouseEnter={e => {
+            if (!copied) e.currentTarget.style.color = '#3b82f6';
+          }}
+          onMouseLeave={e => {
+            if (!copied) e.currentTarget.style.color = '#9ca3af';
+          }}
+        >
+          {copied ? (
+            <span style={{ fontSize: '13px', color: '#374151', fontWeight: 600 }}>Copied!</span>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          )}
         </button>
       </div>
-      {/* code display area with syntax highlighting */}
-      <pre style={{
-        background: '#f8fafc',
-        padding: isMobile ? '15px' : '20px',
-        borderRadius: '8px',
+      {/* Code Box */}
+      <div style={{
+        position: 'relative',
+        background: '#fff',
+        border: '1px solid #e5e7eb',
+        borderRadius: '10px',
+        padding: isMobile ? '14px' : '28px',
+        minHeight: '180px',
+        fontFamily: 'SF Mono, Monaco, Inconsolata, Roboto Mono, Source Code Pro, monospace',
+        fontSize: '13px',
+        color: '#374151',
+        marginBottom: '4px',
         overflow: 'auto',
-        fontSize: '14px',
-        lineHeight: '1.5',
-        fontFamily: 'monospace',
-        color: '#888888',
-        minWidth: 0, // Prevent overflow
-        maxHeight: '300px', // Limit height on small screens
+        boxSizing: 'border-box',
       }}>
-        <code>
-          {getAlgorithmCode()}
-        </code>
-      </pre>
+        <pre style={{
+          margin: 0,
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          background: 'none',
+          fontFamily: 'inherit',
+          fontSize: 'inherit',
+          color: 'inherit',
+        }}>
+          <code>{displayedContent}</code>
+        </pre>
+        {/* Show more button */}
+        {showShowMore && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px' }}>
+            <button
+              onClick={() => setExpanded(e => !e)}
+              style={{
+                padding: '4px 14px',
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                background: '#f3f4f6',
+                color: '#374151',
+                fontSize: '13px',
+                cursor: 'pointer',
+                fontWeight: 500,
+                transition: 'all 0.15s',
+              }}
+            >
+              {expanded ? 'Show less' : 'Show more'}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

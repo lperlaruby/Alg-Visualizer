@@ -21,7 +21,7 @@ export default function ArrayBars({
         <div style={{
             display: 'flex',
             alignItems: 'flex-end',
-            justifyContent: 'flex-start',
+            justifyContent: 'center',
             gap: '2px',
             height: `${calculateVisualizationHeight()}px`, // Use responsive height
             padding: '20px',
