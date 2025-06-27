@@ -221,7 +221,7 @@ export default function HomePage() {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            gap: isMobile ? '20px' : '24px',
+            gap: isMobile ? '20px' : '35px',
             minWidth: 0,
             overflow: 'hidden',
             minHeight: 'fit-content',
