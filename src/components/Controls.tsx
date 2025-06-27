@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { useResponsive } from '@/utils/useResponsive';
 
 // interface for the main controls component props
 interface ControlsProps {
@@ -92,17 +93,26 @@ export default function Controls({
     isSorting,
     isPaused = false
 }: ControlsProps) {
+    // Get responsive utilities
+    const { isMobile } = useResponsive();
+    
     return (
         <div style={{
             display: 'flex',
             gap: '12px',
-            padding: '15px 20px',
+            padding: isMobile ? '10px 15px' : '15px 20px',
             marginBottom: '-20px',
             justifyContent: 'space-between',
-            alignItems: 'center'
+            alignItems: 'center',
+            flexWrap: 'wrap', // Allow wrapping on small screens
+            minWidth: 0, // Prevent overflow
         }}>
             {/* left side - generate new array button */}
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ 
+                display: 'flex', 
+                gap: '12px',
+                flexShrink: 0, // Prevent button from shrinking
+            }}>
                 <button
                     onClick={onGenerateArray}
                     // disable when sorting unless paused
@@ -118,7 +128,8 @@ export default function Controls({
                         fontWeight: "600",
                         fontSize: "14px",
                         transition: "all 0.2s ease",
-                        boxShadow: "grey"
+                        boxShadow: "grey",
+                        whiteSpace: "nowrap", // Prevent text wrapping
                     }}
                     onMouseEnter={(e) => {
                         // only show hover effect if button is enabled
@@ -143,6 +154,7 @@ export default function Controls({
                 borderRadius: '8px',
                 overflow: 'hidden',
                 border: '1px solid #ddd',
+                flexShrink: 0, // Prevent controls from shrinking
             }}>
                 {/* reset button - disabled when not sorting and not paused */}
                 <ControlButton

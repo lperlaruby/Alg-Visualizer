@@ -11,6 +11,7 @@ import { mergeSort } from '@/algorithms/mergeSort';
 import { quickSort } from '@/algorithms/quickSort';
 import CodeDisplay from "@/components/CodeDisplay";
 import Controls from "@/components/Controls";
+import { useResponsive } from '@/utils/useResponsive';
 
 export default function HomePage() {
   // all the state we need to track everything
@@ -33,6 +34,9 @@ export default function HomePage() {
   const [isPaused, setIsPaused] = useState(false);
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Get responsive utilities
+  const { isMobile } = useResponsive();
 
   // function to generate new array - creates random numbers
   const generateNewArray = useCallback(() => {
@@ -186,8 +190,10 @@ export default function HomePage() {
         <div style={{ 
           display: 'flex',
           flex: 1,
-          padding: '20px',
-          gap: '20px',
+          padding: isMobile ? '10px' : '20px',
+          gap: isMobile ? '10px' : '20px',
+          minWidth: 0, // Add this to prevent flex items from overflowing
+          flexWrap: 'wrap', // Allow wrapping on very small screens
         }}>
           {/* sidebar with algorithm selection and settings */}
           <Sidebar
@@ -201,7 +207,10 @@ export default function HomePage() {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            gap: '30px',
+            gap: isMobile ? '15px' : '30px',
+            minWidth: 0, // Add this to prevent flex items from overflowing
+            overflow: 'hidden', // Add this to prevent content from breaking layout
+            minHeight: 'fit-content', // Ensure it takes at least the content height
           }}>
             {/* control buttons for the visualization */}
             <Controls 
@@ -224,6 +233,8 @@ export default function HomePage() {
               flexDirection: 'column',
               overflow: 'hidden',
               flex: 1,
+              minWidth: 0, // Add this to prevent flex items from overflowing
+              minHeight: '400px', // Minimum height to ensure visualization is visible
             }}>
               {/* the main sorting visualization component */}
               <SortingVisualizer 

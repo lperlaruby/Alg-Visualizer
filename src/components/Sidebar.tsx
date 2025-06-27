@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useResponsive } from '@/utils/useResponsive';
 
 // interface for the sidebar component props - defines what callbacks we need
 interface SidebarProps {
@@ -29,6 +30,9 @@ export default function Sidebar({
     const [speed, setSpeed] = useState(50);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+    // Get responsive utilities
+    const { isMobile } = useResponsive();
+
     // handlers for controls - these update local state and call parent functions
     const handleAlgorithmChange = (algorithmId: string) => {
         setSelectedAlgorithm(algorithmId); // update local state
@@ -51,14 +55,17 @@ export default function Sidebar({
 
     return (
         <aside style={{ 
-            width: "320px",
+            width: "min(320px, 100%)",
+            minWidth: "280px",
+            maxWidth: "320px",
             background: "white", 
-            padding: "24px",
+            padding: isMobile ? "16px" : "24px",
             borderRadius: "16px",
             boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
             border: "1px solid rgba(0,0,0,0.05)",
             display: 'flex',
             flexDirection: 'column',
+            flexShrink: 0, // Prevent sidebar from shrinking
         }}>
 
         {/* algorithm selector section - user picks which sorting method to use */}

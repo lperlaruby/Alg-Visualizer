@@ -1,3 +1,5 @@
+import { useResponsive } from '@/utils/useResponsive';
+
 // interface for the array bars component - defines what props we need
 interface ArrayBarsProps {
     array: number[];
@@ -13,6 +15,7 @@ export default function ArrayBars({
     sortedIndices = [] 
 }: ArrayBarsProps) {
     const maxValue = Math.max(...array); // need this to calculate relative heights
+    const { calculateBarWidth, calculateVisualizationHeight } = useResponsive();
     
     return (
         <div style={{
@@ -20,13 +23,13 @@ export default function ArrayBars({
             alignItems: 'flex-end',
             justifyContent: 'flex-start',
             gap: '2px',
-            height: '400px',
+            height: `${calculateVisualizationHeight()}px`, // Use responsive height
             padding: '20px',
-            background: '#f8f9fa',
-            borderRadius: '8px',
-            border: '1px solid #e9ecef',
             overflowX: array.length > 50 ? 'auto' : 'hidden', // scroll if too many bars
-            overflowY: 'hidden'
+            overflowY: 'hidden',
+            minWidth: 0, // Add this to prevent flex items from overflowing
+            flex: 1, // Add this to make it take available space
+            minHeight: '300px', // Minimum height to ensure bars are visible
         }}>
             {array.map((value, index) => {
                 // calculates the bar height as percentage of max value - makes bars proportional
@@ -43,11 +46,14 @@ export default function ArrayBars({
                     backgroundColor = '#ffc107'; // yellow for elements being compared
                 }
                 
+                // Use the responsive hook to calculate bar width
+                const barWidth = calculateBarWidth(array.length);
+                
                 return (
                     <div
                         key={index}
                         style={{
-                            width: `${Math.max(8, Math.min(30, 600 / array.length))}px`, // dynamic width based on array size
+                            width: `${barWidth}px`, // dynamic width based on array size and container
                             height: `${heightPercentage}%`,
                             backgroundColor,
                             border: '1px solid #495057',
@@ -56,7 +62,8 @@ export default function ArrayBars({
                             display: 'flex',
                             alignItems: 'flex-end',
                             justifyContent: 'center',
-                            position: 'relative'
+                            position: 'relative',
+                            flexShrink: 0, // Prevent bars from shrinking
                         }}
                         title={`Index ${index}: ${value}`} // tooltip shows index and value
                     >
@@ -67,7 +74,8 @@ export default function ArrayBars({
                                 top: '-25px',
                                 fontSize: '10px',
                                 fontWeight: 'bold',
-                                color: '#495057'
+                                color: '#495057',
+                                whiteSpace: 'nowrap', // Prevent text wrapping
                             }}>
                                 {value}
                             </span>

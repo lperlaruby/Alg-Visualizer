@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useResponsive } from '@/utils/useResponsive';
 
 // interface for the code display component props
 interface CodeDisplayProps {
@@ -8,6 +9,9 @@ interface CodeDisplayProps {
 const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
   // state to track which programming language is selected
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
+
+  // Get responsive utilities
+  const { isMobile } = useResponsive();
 
   // function to get the code snippet for the selected algorithm
   const getAlgorithmCode = () => {
@@ -36,28 +40,36 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
       background: '#fff',
       borderRadius: '16px',
       boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-      padding: '20px',
-      marginBottom: '5px'
+      padding: isMobile ? '15px' : '20px',
+      marginBottom: '5px',
+      minWidth: 0, // Prevent overflow
+      overflow: 'hidden', // Prevent content from breaking layout
     }}>
       {/* header with language selector and copy button */}
       <div className="code-header" style={{
         display: 'flex',
         justifyContent: 'space-between',
-        marginBottom: '15px'
+        marginBottom: '15px',
+        flexWrap: 'wrap', // Allow wrapping on small screens
+        gap: '10px', // Add gap for wrapped items
       }}>
         {/* language selector buttons */}
-        <div className="language-selector">
+        <div className="language-selector" style={{
+          display: 'flex',
+          flexWrap: 'wrap', // Allow wrapping on small screens
+          gap: '8px', // Add gap between buttons
+        }}>
           <button
             onClick={() => setSelectedLanguage('javascript')}
             className={selectedLanguage === 'javascript' ? 'active' : ''}
             style={{
               padding: '8px 16px',
-              marginRight: '8px',
               border: 'none',
               borderRadius: '4px',
               background: selectedLanguage === 'javascript' ? '#e2e8f0' : 'transparent',
               cursor: 'pointer',
-              color: '#888888'
+              color: '#888888',
+              whiteSpace: 'nowrap', // Prevent text wrapping
             }}
           >
             JavaScript
@@ -71,7 +83,8 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
               borderRadius: '4px',
               background: selectedLanguage === 'python' ? '#e2e8f0' : 'transparent',
               cursor: 'pointer',
-              color: '#888888'
+              color: '#888888',
+              whiteSpace: 'nowrap', // Prevent text wrapping
             }}
           >
             Python
@@ -84,7 +97,8 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
           borderRadius: '4px',
           background: '#f1f5f9',
           cursor: 'pointer',
-          color: '#888888'
+          color: '#888888',
+          whiteSpace: 'nowrap', // Prevent text wrapping
         }}>
           Copy Code
         </button>
@@ -92,13 +106,15 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm }) => {
       {/* code display area with syntax highlighting */}
       <pre style={{
         background: '#f8fafc',
-        padding: '20px',
+        padding: isMobile ? '15px' : '20px',
         borderRadius: '8px',
         overflow: 'auto',
         fontSize: '14px',
         lineHeight: '1.5',
         fontFamily: 'monospace',
-        color: '#888888'
+        color: '#888888',
+        minWidth: 0, // Prevent overflow
+        maxHeight: '300px', // Limit height on small screens
       }}>
         <code>
           {getAlgorithmCode()}

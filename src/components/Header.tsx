@@ -3,17 +3,34 @@ import React from 'react';
 const Header: React.FC = () => {
   return (
     <header className="bg-white text-black">
-      <div className="container mx-auto px-1 py-4">
-        <div className="flex items-center justify-between">
+      <div className="container mx-auto px-4 py-4" style={{
+        maxWidth: '100%',
+        overflow: 'hidden', // Prevent content from breaking layout
+      }}>
+        <div className="flex items-center justify-between" style={{
+          minWidth: 0, // Prevent flex items from overflowing
+        }}>
           {/* left side - logo and title */}
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-4" style={{
+            minWidth: 0, // Prevent flex items from overflowing
+            flex: 1, // Take available space
+          }}>
+            <div className="flex items-center space-x-1" style={{
+              minWidth: 0, // Prevent flex items from overflowing
+            }}>
               {/* logo placeholder - could add an icon here later */}
-              <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
               </div>
-              <div>
+              <div style={{
+                minWidth: 0, // Prevent flex items from overflowing
+                overflow: 'hidden', // Hide overflow
+              }}>
                 {/* main title of the app */}
-                <h1 className="text-2xl font-bold tracking-tight -ml-30">
+                <h1 className="text-1.5xl font-bold tracking-tight" style={{
+                  whiteSpace: 'nowrap', // Prevent text wrapping
+                  overflow: 'hidden', // Hide overflow
+                  textOverflow: 'ellipsis', // Show ellipsis for overflow
+                }}>
                   ALGORITHM VISUALIZER
                 </h1>
               </div>
@@ -21,7 +38,9 @@ const Header: React.FC = () => {
           </div>
           
           {/* right side - navigation links (hidden on mobile) */}
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="hidden md:flex items-center space-x-6" style={{
+            flexShrink: 0, // Prevent navigation from shrinking
+          }}>
             {/* github link */}
             <a 
               href="https://github.com" 
@@ -37,7 +56,9 @@ const Header: React.FC = () => {
           </nav>
           
           {/* mobile menu button (only shows on mobile) */}
-          <div className="md:hidden">
+          <div className="md:hidden" style={{
+            flexShrink: 0, // Prevent button from shrinking
+          }}>
             <button className="text-grey-700 hover:text-white transition-colors duration-200">
               {/* hamburger menu icon */}
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

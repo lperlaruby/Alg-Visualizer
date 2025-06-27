@@ -1,4 +1,5 @@
 import ArrayBars from './ArrayBars';
+import { useResponsive } from '@/utils/useResponsive';
 
 // interface for the sorting visualizer props - defines what data we need
 interface SortingVisualizerProps {
@@ -20,13 +21,18 @@ export default function SortingVisualizer({
     sortedIndices = [],
     description = ""
 }: SortingVisualizerProps) {
+    // Get responsive utilities
+    const { isMobile } = useResponsive();
+    
     return (
         <div style={{ 
             flex: 1, 
-            padding: 20,
+            padding: isMobile ? 15 : 20,
             display: 'flex',
             flexDirection: 'column',
-            gap: '20px'
+            gap: isMobile ? '15px' : '20px',
+            minWidth: 0,
+            overflow: 'hidden',
         }}>
 
             {/* visualization area - this is where the bars are shown */}
@@ -34,7 +40,9 @@ export default function SortingVisualizer({
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '20px'
+                gap: isMobile ? '15px' : '20px',
+                minWidth: 0,
+                overflow: 'hidden',
             }}>
                 {/* the main array bars component that shows the actual visualization */}
                 <ArrayBars 
@@ -43,58 +51,6 @@ export default function SortingVisualizer({
                     swappingIndices={swappingIndices}
                     sortedIndices={sortedIndices}
                 />
-                
-                {/* legend - explains what the colors mean */}
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '30px',
-                    padding: '15px',
-                    background: '#fff',
-                    borderRadius: '8px',
-                    border: '1px solid #e9ecef'
-                }}>
-                    {/* unsorted elements - gray color */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{
-                            width: '20px',
-                            height: '20px',
-                            backgroundColor: '#6c757d',
-                            borderRadius: '4px'
-                        }}></div>
-                        <span style={{ fontSize: '14px', color: '#495057' }}>Unsorted</span>
-                    </div>
-                    {/* comparing elements - yellow color */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{
-                            width: '20px',
-                            height: '20px',
-                            backgroundColor: '#ffc107',
-                            borderRadius: '4px'
-                        }}></div>
-                        <span style={{ fontSize: '14px', color: '#495057' }}>Comparing</span>
-                    </div>
-                    {/* swapping elements - red color */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{
-                            width: '20px',
-                            height: '20px',
-                            backgroundColor: '#dc3545',
-                            borderRadius: '4px'
-                        }}></div>
-                        <span style={{ fontSize: '14px', color: '#495057' }}>Swapping</span>
-                    </div>
-                    {/* sorted elements - green color */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{
-                            width: '20px',
-                            height: '20px',
-                            backgroundColor: '#28a745',
-                            borderRadius: '4px'
-                        }}></div>
-                        <span style={{ fontSize: '14px', color: '#495057' }}>Sorted</span>
-                    </div>
-                </div>
             </div>
         </div>
     );
