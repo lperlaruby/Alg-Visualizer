@@ -9,3 +9,4 @@ export interface SortingStep {
 }
 
 export type AlgorithmType = 'bubble' | 'selection' | 'insertion' | 'merge' | 'quick'; 
+export type Language = 'typescript' | 'python'; 

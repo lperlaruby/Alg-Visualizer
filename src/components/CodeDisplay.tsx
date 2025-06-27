@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useResponsive } from '@/utils/useResponsive';
 import { getAlgorithmCode } from '@/utils/algorithmCode';
 import { getAlgorithmExplanation } from '@/utils/algorithmExplanations';
+import { Language } from '@/types';
 
 // interface for the code display component props
 interface CodeDisplayProps {
@@ -12,14 +13,12 @@ interface CodeDisplayProps {
 const MAX_CODE_LINES = 14; // Number of lines before 'Show more' appears
 
 const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMode }) => {
-  const [selectedLanguage] = useState('typescript');
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>('typescript');
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const { isMobile } = useResponsive();
 
-
-
-    const code = getAlgorithmCode(selectedAlgorithm);
+  const code = getAlgorithmCode(selectedAlgorithm, selectedLanguage);
   const explanation = getAlgorithmExplanation(selectedAlgorithm);
   const content = displayMode === 'code' ? code : explanation;
   const contentLines = content.split('\n');
@@ -31,6 +30,11 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
     navigator.clipboard.writeText(content);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
+  };
+
+  // Get display name for language
+  const getLanguageDisplayName = (lang: Language) => {
+    return lang === 'typescript' ? 'TypeScript' : 'Python';
   };
 
   return (
@@ -50,28 +54,91 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
         marginBottom: '6px',
         paddingBottom: '0',
       }}>
-        {/* Flat tab */}
+        {/* Language tabs (only shown for code mode) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
-          <button
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#222',
-              fontWeight: 700,
-              fontSize: '15px',
-              padding: '10px 18px 8px 18px',
-              marginRight: '8px',
-              outline: 'none',
-              cursor: 'default',
-              boxShadow: 'none',
-              borderRadius: 0,
-              fontFamily: 'inherit',
-            }}
-            tabIndex={-1}
-            disabled
-          >
-            {displayMode === 'code' ? 'TypeScript' : 'Explanation'}
-          </button>
+          {displayMode === 'code' ? (
+            <>
+                             <button
+                 onClick={() => setSelectedLanguage('typescript')}
+                 style={{
+                   background: selectedLanguage === 'typescript' ? '#e5e7eb' : 'none',
+                   border: 'none',
+                   color: '#000000',
+                   fontWeight: selectedLanguage === 'typescript' ? 700 : 500,
+                   fontSize: '14px',
+                   padding: '8px 16px',
+                   marginRight: '4px',
+                   outline: 'none',
+                   cursor: 'pointer',
+                   borderRadius: '6px',
+                   transition: 'all 0.15s',
+                   fontFamily: 'inherit',
+                 }}
+                 onMouseEnter={e => {
+                   if (selectedLanguage !== 'typescript') {
+                     e.currentTarget.style.background = '#f9fafb';
+                   }
+                 }}
+                 onMouseLeave={e => {
+                   if (selectedLanguage !== 'typescript') {
+                     e.currentTarget.style.background = 'none';
+                   }
+                 }}
+               >
+                 TypeScript
+               </button>
+                             <button
+                 onClick={() => setSelectedLanguage('python')}
+                 style={{
+                   background: selectedLanguage === 'python' ? '#e5e7eb' : 'none',
+                   border: 'none',
+                   color: '#000000',
+                   fontWeight: selectedLanguage === 'python' ? 700 : 500,
+                   fontSize: '14px',
+                   padding: '8px 16px',
+                   marginRight: '8px',
+                   outline: 'none',
+                   cursor: 'pointer',
+                   borderRadius: '6px',
+                   transition: 'all 0.15s',
+                   fontFamily: 'inherit',
+                 }}
+                 onMouseEnter={e => {
+                   if (selectedLanguage !== 'python') {
+                     e.currentTarget.style.background = '#f9fafb';
+                   }
+                 }}
+                 onMouseLeave={e => {
+                   if (selectedLanguage !== 'python') {
+                     e.currentTarget.style.background = 'none';
+                   }
+                 }}
+               >
+                 Python
+               </button>
+            </>
+          ) : (
+            <button
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#222',
+                fontWeight: 700,
+                fontSize: '15px',
+                padding: '10px 18px 8px 18px',
+                marginRight: '8px',
+                outline: 'none',
+                cursor: 'default',
+                boxShadow: 'none',
+                borderRadius: 0,
+                fontFamily: 'inherit',
+              }}
+              tabIndex={-1}
+              disabled
+            >
+              Explanation
+            </button>
+          )}
         </div>
         {/* Copy button */}
         <button

@@ -1,9 +1,9 @@
 // Algorithm code snippets for display in the CodeDisplay component
+import { Language } from '@/types';
 
-export const getAlgorithmCode = (selectedAlgorithm: string): string => {
-  switch (selectedAlgorithm) {
-    case 'bubble':
-      return `// bubble sort algorithm - the classic simple sorting method
+const algorithmCodeSnippets = {
+  typescript: {
+    bubble: `// bubble sort algorithm - the classic simple sorting method
 export function bubbleSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array]; // making a copy to avoid mutating original array
@@ -23,9 +23,8 @@ export function bubbleSort(array: number[]): SortingStep[] {
     }
 
     return steps;
-}`;
-    case 'selection':
-      return `// selection sort - find the minimum and place it at the beginning
+}`,
+    selection: `// selection sort - find the minimum and place it at the beginning
 export function selectionSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array];
@@ -49,9 +48,8 @@ export function selectionSort(array: number[]): SortingStep[] {
     }
     
     return steps;
-}`;
-    case 'insertion':
-      return `// insertion sort - build the final array one item at a time
+}`,
+    insertion: `// insertion sort - build the final array one item at a time
 export function insertionSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array];
@@ -73,9 +71,8 @@ export function insertionSort(array: number[]): SortingStep[] {
     }
     
     return steps;
-}`;
-    case 'merge':
-      return `// merge sort - divide and conquer approach
+}`,
+    merge: `// merge sort - divide and conquer approach
 export function mergeSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array];
@@ -111,9 +108,8 @@ export function mergeSort(array: number[]): SortingStep[] {
     };
     
     return steps;
-}`;
-    case 'quick':
-      return `// quick sort - pick a pivot and partition around it
+}`,
+    quick: `// quick sort - pick a pivot and partition around it
 export function quickSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array];
@@ -157,8 +153,162 @@ export function quickSort(array: number[]): SortingStep[] {
     quickSortHelper(0, arr.length - 1); // start the recursive process
     
     return steps;
-}`;
-    default:
-      return '// select an algorithm to view its code';
+}`,
+    default: '// select an algorithm to view its code'
+  },
+  python: {
+    bubble: `# bubble sort algorithm - the classic simple sorting method
+def bubble_sort(array):
+    """
+    Bubble sort algorithm implementation
+    Returns a list of steps for visualization
+    """
+    arr = array.copy()  # making a copy to avoid mutating original array
+    n = len(arr)
+    steps = []
+    
+    # outer loop to number of passes - each pass puts the largest element in place
+    for i in range(n - 1):
+        # inner loop to compare adjacent elements - bubble up the largest value
+        for j in range(n - i - 1):
+            # if need to swap, show the swap - only swap if left is bigger than right
+            if arr[j] > arr[j + 1]:
+                # swap the elements - the actual swap operation
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    
+    return steps`,
+    selection: `# selection sort - find the minimum and place it at the beginning
+def selection_sort(array):
+    """
+    Selection sort algorithm implementation
+    Returns a list of steps for visualization
+    """
+    arr = array.copy()
+    n = len(arr)
+    steps = []
+    
+    for i in range(n - 1):
+        min_index = i
+        
+        # find the minimum element in the unsorted portion
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        
+        # swap the found minimum with the first element        
+        if min_index != i:
+            arr[i], arr[min_index] = arr[min_index], arr[i]
+    
+    return steps`,
+    insertion: `# insertion sort - build the final array one item at a time
+def insertion_sort(array):
+    """
+    Insertion sort algorithm implementation
+    Returns a list of steps for visualization
+    """
+    arr = array.copy()
+    n = len(arr)
+    steps = []
+    
+    for i in range(1, n):
+        current = arr[i]
+        j = i - 1
+        
+        # move elements that are greater than current
+        # to one position ahead of their current position
+        while j >= 0 and arr[j] > current:
+            arr[j + 1] = arr[j]
+            j -= 1
+        
+        arr[j + 1] = current
+    
+    return steps`,
+    merge: `# merge sort - divide and conquer approach
+def merge_sort(array):
+    """
+    Merge sort algorithm implementation
+    Returns a list of steps for visualization
+    """
+    arr = array.copy()
+    steps = []
+    
+    def merge(left, right):
+        """Merge function to combine two sorted arrays"""
+        result = []
+        left_index = 0
+        right_index = 0
+        
+        while left_index < len(left) and right_index < len(right):
+            if left[left_index] <= right[right_index]:
+                result.append(left[left_index])
+                left_index += 1
+            else:
+                result.append(right[right_index])
+                right_index += 1
+        
+        # add remaining elements
+        result.extend(left[left_index:])
+        result.extend(right[right_index:])
+        return result
+    
+    def merge_sort_helper(arr):
+        """Recursive merge sort function"""
+        if len(arr) <= 1:
+            return arr
+        
+        mid = len(arr) // 2
+        left = merge_sort_helper(arr[:mid])
+        right = merge_sort_helper(arr[mid:])
+        
+        return merge(left, right)
+    
+    return steps`,
+    quick: `# quick sort - pick a pivot and partition around it
+def quick_sort(array):
+    """
+    Quick sort algorithm implementation
+    Returns a list of steps for visualization
+    """
+    arr = array.copy()
+    steps = []
+    
+    def partition(low, high):
+        """Partition function - puts pivot in right place and returns its position"""
+        pivot = arr[high]  # pick the last element as pivot
+        i = low - 1  # index for elements smaller than pivot
+        
+        # go through all elements and put smaller ones to the left
+        for j in range(low, high):
+            # if current element is smaller than pivot, swap it to left side
+            if arr[j] < pivot:
+                i += 1  # move the boundary for smaller elements
+                
+                if i != j:
+                    arr[i], arr[j] = arr[j], arr[i]  # do the swap
+        
+        # place pivot in correct position
+        if i + 1 != high:
+            arr[i + 1], arr[high] = arr[high], arr[i + 1]
+        
+        return i + 1  # return the pivot's final position
+    
+    def quick_sort_helper(low, high):
+        """Recursive helper function - this does the divide and conquer"""
+        if low < high:
+            pi = partition(low, high)  # get pivot position
+            
+            # recursively sort left and right parts
+            quick_sort_helper(low, pi - 1)  # sort left side of pivot
+            quick_sort_helper(pi + 1, high)  # sort right side of pivot
+    
+    quick_sort_helper(0, len(arr) - 1)  # start the recursive process
+    
+    return steps`,
+    default: '# select an algorithm to view its code'
   }
+};
+
+export const getAlgorithmCode = (selectedAlgorithm: string, language: Language = 'typescript'): string => {
+  const languageSnippets = algorithmCodeSnippets[language];
+  return languageSnippets[selectedAlgorithm as keyof typeof languageSnippets] || languageSnippets.default;
 }; 
