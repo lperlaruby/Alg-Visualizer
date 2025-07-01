@@ -57,7 +57,7 @@ export default function Sidebar({
             minWidth: "200px",
             maxWidth: "280px",
             background: "none",
-            padding: isMobile ? "10px 8px 10px 8px" : "18px 16px 18px 16px",
+            padding: isMobile ? "10px 8px 10px 10px" : "18px 16px 18px 0px",
             borderRadius: 0,
             boxShadow: "none",
             border: "none",
@@ -84,7 +84,7 @@ export default function Sidebar({
                     fontSize: 15,
                     cursor: isSorting ? "not-allowed" : "pointer",
                     marginBottom: 4,
-                    padding: "0 10px 0 10px",
+                    padding: "0 6px 06px",
                     boxSizing: "border-box",
                 }}
             >
