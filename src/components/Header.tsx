@@ -58,7 +58,7 @@ const Header: React.FC = () => {
             <nav className="mr-5">
               {/* github link */}
               <a 
-                href="https://github.com" 
+                href="https://github.com/lperlaruby" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-grey-700 hover:text-white transition-colors duration-200 font-medium flex items-center space-x-1"
