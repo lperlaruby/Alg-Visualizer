@@ -10,7 +10,7 @@ interface CodeDisplayProps {
   displayMode: 'code' | 'explanation';
 }
 
-const MAX_CODE_LINES = 14; // Number of lines before 'Show more' appears
+const MAX_CODE_LINES = 10; // Number of lines before 'Show more' appears
 
 const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMode }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('typescript');
@@ -42,7 +42,7 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
       background: '#f3f4f6',
       border: '1px solid #e5e7eb',
       borderRadius: '12px',
-      padding: isMobile ? '4px' : '8px',
+      padding: isMobile ? '4px' : '6px',
       minWidth: 0,
       boxShadow: '0 1px 2px 0 rgba(0,0,0,0.01)',
     }}>
@@ -180,8 +180,8 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
         background: '#fff',
         border: '1px solid #e5e7eb',
         borderRadius: '10px',
-        padding: isMobile ? '14px' : '28px',
-        minHeight: '180px',
+        padding: isMobile ? '10px' : '16px',
+        minHeight: '140px',
         fontFamily: 'SF Mono, Monaco, Inconsolata, Roboto Mono, Source Code Pro, monospace',
         fontSize: '13px',
         color: '#374151',

@@ -28,10 +28,10 @@ const SortingVisualizer = React.memo<SortingVisualizerProps>(({
     return (
         <div style={{ 
             flex: 1, 
-            padding: isMobile ? '20px' : '24px',
+            padding: isMobile ? '12px' : '16px',
             display: 'flex',
             flexDirection: 'column',
-            gap: isMobile ? '20px' : '24px',
+            gap: isMobile ? '12px' : '16px',
             minWidth: 0,
             overflow: 'hidden',
             border: '2px solid #e5e7eb',
@@ -45,10 +45,10 @@ const SortingVisualizer = React.memo<SortingVisualizerProps>(({
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: isMobile ? '20px' : '24px',
+                gap: isMobile ? '12px' : '16px',
                 minWidth: 0,
                 overflow: 'hidden',
-                padding: '16px',
+                padding: '12px',
             }}>
                 {/* the main array bars component that shows the actual visualization */}
                 <ArrayBars 

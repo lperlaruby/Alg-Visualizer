@@ -24,12 +24,12 @@ export default function ArrayBars({
             justifyContent: 'center',
             gap: '2px',
             height: `${calculateVisualizationHeight()}px`, // Use responsive height
-            padding: '20px',
+            padding: '12px',
             overflowX: array.length > 50 ? 'auto' : 'hidden', // scroll if too many bars
             overflowY: 'hidden',
             minWidth: 0, // Add this to prevent flex items from overflowing
             flex: 1, // Add this to make it take available space
-            minHeight: '300px', // Minimum height to ensure bars are visible
+            minHeight: '200px', // Minimum height to ensure bars are visible
         }}>
             {array.map((value, index) => {
                 // calculates the bar height as percentage of max value - makes bars proportional

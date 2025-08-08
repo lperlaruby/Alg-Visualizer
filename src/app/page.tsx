@@ -182,8 +182,8 @@ export default function HomePage() {
         <div style={{ 
           display: 'flex',
           flex: 1,
-          padding: isMobile ? '10px' : '20px',
-          gap: isMobile ? '10px' : '20px',
+          padding: isMobile ? '8px' : '12px',
+          gap: isMobile ? '8px' : '12px',
           minWidth: 0,
           flexWrap: 'wrap',
           borderTop: '1.5px solid #d1d5db', // Darker line below header
@@ -195,8 +195,8 @@ export default function HomePage() {
             position: 'relative',
             minHeight: '0', 
             minWidth: '0',
-            marginTop: '-20px', // Extend to touch header border
-            paddingTop: '20px', // Compensate for the negative margin
+            marginTop: '-12px', // Extend to touch header border
+            paddingTop: '12px', // Compensate for the negative margin
           }}>
             {/* Full-height border line */}
             <div style={{
@@ -221,7 +221,7 @@ export default function HomePage() {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            gap: isMobile ? '20px' : '35px',
+            gap: isMobile ? '16px' : '20px',
             minWidth: 0,
             overflow: 'hidden',
             minHeight: 'fit-content',

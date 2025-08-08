@@ -57,7 +57,7 @@ export default function Sidebar({
             minWidth: "200px",
             maxWidth: "280px",
             background: "none",
-            padding: isMobile ? "10px 8px 10px 10px" : "18px 16px 18px 0px",
+            padding: isMobile ? "8px 6px 8px 8px" : "12px 12px 12px 0px",
             borderRadius: 0,
             boxShadow: "none",
             border: "none",
@@ -68,7 +68,7 @@ export default function Sidebar({
         }}>
 
         {/* Algorithms Section */}
-        <div style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 12 }}>
             <button
                 onClick={() => setAlgorithmsOpen((open) => !open)}
                 disabled={isSorting}
@@ -129,7 +129,7 @@ export default function Sidebar({
         {/* Divider */}
         <div style={{ width: '100%', height: 1, background: '#e5e7eb', margin: '10px 0', border: 'none' }} />
         {/* array size control section */}
-        <div style={{ marginBottom: 20, display: "flex", flexDirection: "column", padding: "0 10px" }}>
+        <div style={{ marginBottom: 12, display: "flex", flexDirection: "column", padding: "0 10px" }}>
             <h4 style={{ marginBottom: 8, color: "#333", fontSize: "14px", fontWeight: "600" }}>Array Size</h4>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
                 <input
@@ -149,7 +149,7 @@ export default function Sidebar({
         {/* Divider */}
         <div style={{ width: '100%', height: 1, background: '#e5e7eb', margin: '10px 0', border: 'none' }} />
         {/* animation speed control section */}
-        <div style={{ marginBottom: 20, display: "flex", flexDirection: "column", padding: "0 10px" }}>
+        <div style={{ marginBottom: 12, display: "flex", flexDirection: "column", padding: "0 10px" }}>
             <h4 style={{ marginBottom: 8, color: "#333", fontSize: "14px", fontWeight: "600" }}>Animation Speed</h4>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
                 <input
@@ -174,7 +174,7 @@ export default function Sidebar({
             background: "#f3f4f6",
             borderRadius: 8,
             boxShadow: "none",
-            padding: "12px 10px",
+            padding: "8px 10px",
             border: "1px solid #f3f4f6",
             minWidth: 0,
             marginBottom: 0,

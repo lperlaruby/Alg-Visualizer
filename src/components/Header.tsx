@@ -10,7 +10,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-white text-black">
-      <div className="container mx-auto px-2 py-4" style={{
+      <div className="container mx-auto px-2 py-2" style={{
         maxWidth: '100%',
         overflow: 'hidden', // Prevent content from breaking layout
       }}>

@@ -30,6 +30,8 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* Prevent horizontal scroll */
+  height: 100vh; /* Ensure body takes full viewport height */
+  overflow-y: hidden; /* Prevent vertical scroll for 1440px optimization */
 }
 
 /* Array Bar Optimized Styles */

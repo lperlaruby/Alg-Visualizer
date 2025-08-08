@@ -122,7 +122,7 @@ export default function Controls({
         <div style={{
             display: 'flex',
             gap: '12px',
-            padding: isMobile ? '20px 20px 0px 4px' : '24px 24px 0px 2px',
+            padding: isMobile ? '12px 12px 0px 4px' : '16px 16px 0px 2px',
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap', // Allow wrapping on small screens
@@ -201,7 +201,7 @@ export default function Controls({
                 overflow: 'hidden',
                 border: '1px solid #ddd',
                 flexShrink: 0,
-                marginRight: isMobile ? '12px' : '-20px',
+                marginRight: isMobile ? '8px' : '-12px',
             }}>
                 {/* reset button - disabled when not sorting and not paused */}
                 <ControlButton
