@@ -1,6 +1,6 @@
 import { useResponsive } from '@/utils/useResponsive';
 
-// interface for the array bars component - defines what props we need
+// Array visualization component
 interface ArrayBarsProps {
     array: number[];
     comparingIndices?: number[];
@@ -14,7 +14,7 @@ export default function ArrayBars({
     swappingIndices = [], 
     sortedIndices = [] 
 }: ArrayBarsProps) {
-    const maxValue = Math.max(...array); // need this to calculate relative heights
+    const maxValue = Math.max(...array);
     const { calculateBarWidth, calculateVisualizationHeight } = useResponsive();
     
     return (
@@ -25,49 +25,49 @@ export default function ArrayBars({
             gap: '2px',
             height: `${calculateVisualizationHeight()}px`, // Use responsive height
             padding: '12px',
-            overflowX: array.length > 50 ? 'auto' : 'hidden', // scroll if too many bars
+            overflowX: array.length > 50 ? 'auto' : 'hidden',
             overflowY: 'hidden',
-            minWidth: 0, // Add this to prevent flex items from overflowing
-            flex: 1, // Add this to make it take available space
-            minHeight: '200px', // Minimum height to ensure bars are visible
+            minWidth: 0,
+            flex: 1,
+            minHeight: '200px',
         }}>
             {array.map((value, index) => {
-                // calculates the bar height as percentage of max value - makes bars proportional
+                // Calculate bar height
                 const heightPercentage = (value / maxValue) * 100;
                 
-                // determines the bar color based on current state - this is the visual feedback
-                let backgroundColor = '#6c757d'; // default gray for unsorted
+                // Determine bar color
+                let backgroundColor = '#6c757d';
                 
                 if (sortedIndices.includes(index)) {
-                    backgroundColor = '#28a745'; // green for sorted elements
+                    backgroundColor = '#28a745';
                 } else if (swappingIndices.includes(index)) {
-                    backgroundColor = '#dc3545'; // red for elements being swapped
+                    backgroundColor = '#dc3545';
                 } else if (comparingIndices.includes(index)) {
-                    backgroundColor = '#ffc107'; // yellow for elements being compared
+                    backgroundColor = '#ffc107';
                 }
                 
-                // Use the responsive hook to calculate bar width
+                // Calculate responsive width
                 const barWidth = calculateBarWidth(array.length);
                 
                 return (
                     <div
                         key={index}
                         style={{
-                            width: `${barWidth}px`, // dynamic width based on array size and container
+                            width: `${barWidth}px`,
                             height: `${heightPercentage}%`,
                             backgroundColor,
                             border: '1px solid #495057',
                             borderRadius: '4px 4px 0 0',
-                            transition: 'all 0.1s ease-in-out', // smooth color transitions
+                            transition: 'all 0.1s ease-in-out',
                             display: 'flex',
                             alignItems: 'flex-end',
                             justifyContent: 'center',
                             position: 'relative',
-                            flexShrink: 0, // Prevent bars from shrinking
+                            flexShrink: 0,
                         }}
-                        title={`Index ${index}: ${value}`} // tooltip shows index and value
+                        title={`Index ${index}: ${value}`}
                     >
-                        {/* shows the value on top of bar if array is small enough - don't clutter with big arrays */}
+                        {/* Show values for smaller arrays */}
                         {array.length <= 30 && (
                             <span style={{
                                 position: 'absolute',
@@ -75,7 +75,7 @@ export default function ArrayBars({
                                 fontSize: '10px',
                                 fontWeight: 'bold',
                                 color: '#495057',
-                                whiteSpace: 'nowrap', // Prevent text wrapping
+                                whiteSpace: 'nowrap',
                             }}>
                                 {value}
                             </span>

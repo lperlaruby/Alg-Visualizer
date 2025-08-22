@@ -1,6 +1,6 @@
-// helper functions for sorting algorithms
+// Utility functions
 
-// function to handle pause functionality - waits until unpaused
+// Pause handler
 export const handlePause = async (isPaused: boolean) => {
   if (isPaused) {
     await new Promise<void>(resolve => {
@@ -14,12 +14,12 @@ export const handlePause = async (isPaused: boolean) => {
   }
 };
 
-// function to wait for next animation frame - maintains smooth 60fps
+// Animation frame helper
 export const waitForNextFrame = () => {
-  return new Promise<void>(resolve => setTimeout(resolve, 16)); // ~60fps
+  return new Promise<void>(resolve => setTimeout(resolve, 16));
 };
 
-// function to update array state with delay - controls animation speed
+// Update array with delay
 export const updateArrayState = async (
   arrayCopy: number[], 
   setArray: (array: number[]) => void, 

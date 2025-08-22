@@ -40,7 +40,7 @@ export function useResponsive() {
   }, [windowSize.width]);
 
   const calculateVisualizationHeight = useCallback(() => {
-    // Optimize for 1440px and similar high-resolution screens
+
     if (windowSize.height >= 900) {
       return Math.min(350, windowSize.height * 0.35);
     }

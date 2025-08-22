@@ -1,4 +1,4 @@
-// insertion sort - build the sorted array one element at a time
+// Insertion sort with step tracking
 import { SortingStep } from '@/types';
 
 export function insertionSort(array: number[]): SortingStep[] {

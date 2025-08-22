@@ -1,4 +1,4 @@
-// Shared types for the algorithm visualizer
+// Type definitions
 
 export interface SortingStep {
     arrayChanges?: { index: number; value: number }[];

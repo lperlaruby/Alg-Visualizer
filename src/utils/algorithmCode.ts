@@ -1,22 +1,22 @@
-// Algorithm code snippets for display in the CodeDisplay component
+// Code snippets for display
 import { Language } from '@/types';
 
 const algorithmCodeSnippets = {
   typescript: {
-    bubble: `// bubble sort algorithm - the classic simple sorting method
+    bubble: `// Bubble sort implementation
 export function bubbleSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
-    const arr = [...array]; // making a copy to avoid mutating original array
+    const arr = [...array];
     
     const n = arr.length;
     
-    // outer loop to number of passes - each pass puts the largest element in place
+    // Each pass bubbles largest element to end
     for (let i = 0; i < n - 1; i++) {
-        // inner loop to compare adjacent elements - bubble up the largest value
+        // Compare adjacent elements
         for (let j = 0; j < n - i - 1; j++) {
-            // if need to swap, show the swap - only swap if left is bigger than right
+            // Swap if out of order
             if (arr[j] > arr[j + 1]) {
-                // swap the elements - the actual swap operation
+                // Swap elements
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
             }
         }
@@ -24,7 +24,7 @@ export function bubbleSort(array: number[]): SortingStep[] {
 
     return steps;
 }`,
-    selection: `// selection sort - find the minimum and place it at the beginning
+    selection: `// Selection sort implementation
 export function selectionSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array];
@@ -34,14 +34,14 @@ export function selectionSort(array: number[]): SortingStep[] {
     for (let i = 0; i < n - 1; i++) {
         let minIndex = i;
         
-        // find the minimum element in the unsorted portion
+        // Find minimum in unsorted part
         for (let j = i + 1; j < n; j++) {
             if (arr[j] < arr[minIndex]) {
                 minIndex = j;
             }
         }
         
-        // swap the found minimum with the first element
+        // Move minimum to front
         if (minIndex !== i) {
             [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
         }
@@ -49,7 +49,7 @@ export function selectionSort(array: number[]): SortingStep[] {
     
     return steps;
 }`,
-    insertion: `// insertion sort - build the final array one item at a time
+    insertion: `// Insertion sort implementation
 export function insertionSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array];
@@ -60,8 +60,8 @@ export function insertionSort(array: number[]): SortingStep[] {
         let current = arr[i];
         let j = i - 1;
         
-        // move elements that are greater than current
-        // to one position ahead of their current position
+        // Shift larger elements right
+
         while (j >= 0 && arr[j] > current) {
             arr[j + 1] = arr[j];
             j--;
@@ -72,12 +72,12 @@ export function insertionSort(array: number[]): SortingStep[] {
     
     return steps;
 }`,
-    merge: `// merge sort - divide and conquer approach
+    merge: `// Merge sort implementation
 export function mergeSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array];
     
-    // merge function to combine two sorted arrays
+    // Merge two sorted arrays
     const merge = (left: number[], right: number[]): number[] => {
         let result: number[] = [];
         let leftIndex = 0;
@@ -96,7 +96,7 @@ export function mergeSort(array: number[]): SortingStep[] {
         return result.concat(left.slice(leftIndex), right.slice(rightIndex));
     };
     
-    // recursive merge sort function
+    // Recursive divide and conquer
     const mergeSortHelper = (arr: number[]): number[] => {
         if (arr.length <= 1) return arr;
         
@@ -109,75 +109,75 @@ export function mergeSort(array: number[]): SortingStep[] {
     
     return steps;
 }`,
-    quick: `// quick sort - pick a pivot and partition around it
+    quick: `// Quick sort implementation
 export function quickSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
     const arr = [...array];
     
-    // partition function - puts pivot in right place and returns its position
+    // Partition around pivot
     const partition = (low: number, high: number): number => {
-        const pivot = arr[high]; // pick the last element as pivot
-        let i = low - 1; // index for elements smaller than pivot
+        const pivot = arr[high];
+        let i = low - 1;
 
-        // go through all elements and put smaller ones to the left
+        // Move smaller elements left
         for (let j = low; j < high; j++) {
-            // if current element is smaller than pivot, swap it to left side
+            // Partition step
             if (arr[j] < pivot) {
-                i++; // move the boundary for smaller elements
+                i++;
                 
                 if (i !== j) {
-                    [arr[i], arr[j]] = [arr[j], arr[i]]; // do the swap
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
                 }
             }
         }
 
-        // place pivot in correct position
+        // Place pivot in final position
         if (i + 1 !== high) {
             [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
         }
 
-        return i + 1; // return the pivot's final position
+        return i + 1;
     };
 
-    // recursive helper function - this does the divide and conquer
+    // Recursive helper
     const quickSortHelper = (low: number, high: number) => {
         if (low < high) {
-            const pi = partition(low, high); // get pivot position
+            const pi = partition(low, high);
             
-            // recursively sort left and right parts
-            quickSortHelper(low, pi - 1); // sort left side of pivot
-            quickSortHelper(pi + 1, high); // sort right side of pivot
+            // Sort partitions
+            quickSortHelper(low, pi - 1);
+            quickSortHelper(pi + 1, high);
         }
     };
 
-    quickSortHelper(0, arr.length - 1); // start the recursive process
+    quickSortHelper(0, arr.length - 1);
     
     return steps;
 }`,
     default: '// select an algorithm to view its code'
   },
   python: {
-    bubble: `# bubble sort algorithm - the classic simple sorting method
+    bubble: `# Bubble sort implementation
 def bubble_sort(array):
     """
     Bubble sort algorithm implementation
     Returns a list of steps for visualization
     """
-    arr = array.copy()  # making a copy to avoid mutating original array
+    arr = array.copy()
     n = len(arr)
     steps = []
     
-    # outer loop to number of passes - each pass puts the largest element in place
+    # Each pass bubbles largest element to end
     for i in range(n - 1):
-        # inner loop to compare adjacent elements - bubble up the largest value
+        # Compare adjacent elements
         for j in range(n - i - 1):
-            # if need to swap, show the swap - only swap if left is bigger than right
+            # Swap if out of order
             if arr[j] > arr[j + 1]:
-                # swap the elements - the actual swap operation
+                # Swap elements
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
     
     return steps`,
-    selection: `# selection sort - find the minimum and place it at the beginning
+    selection: `# Selection sort implementation
 def selection_sort(array):
     """
     Selection sort algorithm implementation
@@ -190,17 +190,17 @@ def selection_sort(array):
     for i in range(n - 1):
         min_index = i
         
-        # find the minimum element in the unsorted portion
+        # Find minimum in unsorted part
         for j in range(i + 1, n):
             if arr[j] < arr[min_index]:
                 min_index = j
         
-        # swap the found minimum with the first element        
+        # Move minimum to front
         if min_index != i:
             arr[i], arr[min_index] = arr[min_index], arr[i]
     
     return steps`,
-    insertion: `# insertion sort - build the final array one item at a time
+    insertion: `# Insertion sort implementation
 def insertion_sort(array):
     """
     Insertion sort algorithm implementation
@@ -214,8 +214,8 @@ def insertion_sort(array):
         current = arr[i]
         j = i - 1
         
-        # move elements that are greater than current
-        # to one position ahead of their current position
+        # Shift larger elements right
+
         while j >= 0 and arr[j] > current:
             arr[j + 1] = arr[j]
             j -= 1
@@ -223,7 +223,7 @@ def insertion_sort(array):
         arr[j + 1] = current
     
     return steps`,
-    merge: `# merge sort - divide and conquer approach
+    merge: `# Merge sort implementation
 def merge_sort(array):
     """
     Merge sort algorithm implementation
@@ -233,7 +233,7 @@ def merge_sort(array):
     steps = []
     
     def merge(left, right):
-        """Merge function to combine two sorted arrays"""
+        """Merge two sorted arrays"""
         result = []
         left_index = 0
         right_index = 0
@@ -246,13 +246,13 @@ def merge_sort(array):
                 result.append(right[right_index])
                 right_index += 1
         
-        # add remaining elements
+        # Add remaining
         result.extend(left[left_index:])
         result.extend(right[right_index:])
         return result
     
     def merge_sort_helper(arr):
-        """Recursive merge sort function"""
+        """Recursive divide and conquer"""
         if len(arr) <= 1:
             return arr
         
@@ -263,7 +263,7 @@ def merge_sort(array):
         return merge(left, right)
     
     return steps`,
-    quick: `# quick sort - pick a pivot and partition around it
+    quick: `# Quick sort implementation
 def quick_sort(array):
     """
     Quick sort algorithm implementation
@@ -273,35 +273,35 @@ def quick_sort(array):
     steps = []
     
     def partition(low, high):
-        """Partition function - puts pivot in right place and returns its position"""
-        pivot = arr[high]  # pick the last element as pivot
-        i = low - 1  # index for elements smaller than pivot
+        """Partition around pivot"""
+        pivot = arr[high]
+        i = low - 1
         
-        # go through all elements and put smaller ones to the left
+        # Move smaller elements left
         for j in range(low, high):
-            # if current element is smaller than pivot, swap it to left side
+            # Partition step
             if arr[j] < pivot:
-                i += 1  # move the boundary for smaller elements
+                i += 1
                 
                 if i != j:
-                    arr[i], arr[j] = arr[j], arr[i]  # do the swap
+                    arr[i], arr[j] = arr[j], arr[i]
         
-        # place pivot in correct position
+        # Place pivot in final position
         if i + 1 != high:
             arr[i + 1], arr[high] = arr[high], arr[i + 1]
         
-        return i + 1  # return the pivot's final position
+        return i + 1
     
     def quick_sort_helper(low, high):
-        """Recursive helper function - this does the divide and conquer"""
+        """Recursive helper"""
         if low < high:
-            pi = partition(low, high)  # get pivot position
+            pi = partition(low, high)
             
-            # recursively sort left and right parts
-            quick_sort_helper(low, pi - 1)  # sort left side of pivot
-            quick_sort_helper(pi + 1, high)  # sort right side of pivot
+            # Sort partitions
+            quick_sort_helper(low, pi - 1)
+            quick_sort_helper(pi + 1, high)
     
-    quick_sort_helper(0, len(arr) - 1)  # start the recursive process
+    quick_sort_helper(0, len(arr) - 1)
     
     return steps`,
     default: '# select an algorithm to view its code'

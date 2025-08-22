@@ -2,7 +2,7 @@ import React from 'react';
 import ArrayBars from './ArrayBars';
 import { useResponsive } from '@/utils/useResponsive';
 
-// interface for the sorting visualizer props - defines what data we need
+// Main visualization container
 interface SortingVisualizerProps {
     array: number[];
     isSorting: boolean;
@@ -22,7 +22,7 @@ const SortingVisualizer = React.memo<SortingVisualizerProps>(({
     sortedIndices = [],
     description = ""
 }) => {
-    // Get responsive utilities
+    // Responsive design
     const { isMobile } = useResponsive();
     
     return (
@@ -40,7 +40,7 @@ const SortingVisualizer = React.memo<SortingVisualizerProps>(({
             background: '#fff',
         }}>
 
-            {/* visualization area - this is where the bars are shown */}
+            {/* Visualization area */}
             <div style={{
                 flex: 1,
                 display: 'flex',
@@ -50,7 +50,7 @@ const SortingVisualizer = React.memo<SortingVisualizerProps>(({
                 overflow: 'hidden',
                 padding: '12px',
             }}>
-                {/* the main array bars component that shows the actual visualization */}
+                {/* Array bars */}
                 <ArrayBars 
                     array={array}
                     comparingIndices={comparingIndices}

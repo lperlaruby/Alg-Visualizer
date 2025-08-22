@@ -4,13 +4,13 @@ import { getAlgorithmCode } from '@/utils/algorithmCode';
 import { getAlgorithmExplanation } from '@/utils/algorithmExplanations';
 import { Language } from '@/types';
 
-// interface for the code display component props
+// Code display component props
 interface CodeDisplayProps {
   selectedAlgorithm: string;
   displayMode: 'code' | 'explanation';
 }
 
-const MAX_CODE_LINES = 10; // Number of lines before 'Show more' appears
+const MAX_CODE_LINES = 14;
 
 const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMode }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('typescript');
@@ -25,14 +25,14 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
   const showShowMore = contentLines.length > MAX_CODE_LINES;
   const displayedContent = expanded || !showShowMore ? content : contentLines.slice(0, MAX_CODE_LINES).join('\n') + '\n...';
 
-  // Copy content to clipboard with feedback
+  // Copy to clipboard
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
-  // Get display name for language
+  // Language display name
   const getLanguageDisplayName = (lang: Language) => {
     return lang === 'typescript' ? 'TypeScript' : 'Python';
   };
@@ -42,11 +42,11 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
       background: '#f3f4f6',
       border: '1px solid #e5e7eb',
       borderRadius: '12px',
-      padding: isMobile ? '4px' : '6px',
+      padding: isMobile ? '4px' : '8px',
       minWidth: 0,
       boxShadow: '0 1px 2px 0 rgba(0,0,0,0.01)',
     }}>
-      {/* Tabs and Copy button row */}
+      {/* Header */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -54,7 +54,7 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
         marginBottom: '6px',
         paddingBottom: '0',
       }}>
-        {/* Language tabs (only shown for code mode) */}
+        {/* Language tabs */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
           {displayMode === 'code' ? (
             <>
@@ -140,7 +140,7 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
             </button>
           )}
         </div>
-        {/* Copy button */}
+        {/* Copy */}
         <button
           onClick={handleCopy}
           title={copied ? 'Copied!' : `Copy ${displayMode}`}
@@ -174,14 +174,14 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
           )}
         </button>
       </div>
-      {/* Code Box */}
+      {/* Content */}
       <div style={{
         position: 'relative',
         background: '#fff',
         border: '1px solid #e5e7eb',
         borderRadius: '10px',
-        padding: isMobile ? '10px' : '16px',
-        minHeight: '140px',
+        padding: isMobile ? '14px' : '28px',
+        minHeight: '180px',
         fontFamily: 'SF Mono, Monaco, Inconsolata, Roboto Mono, Source Code Pro, monospace',
         fontSize: '13px',
         color: '#374151',
@@ -200,7 +200,7 @@ const CodeDisplay: React.FC<CodeDisplayProps> = ({ selectedAlgorithm, displayMod
         }}>
           <code>{displayedContent}</code>
         </pre>
-        {/* Show more button */}
+        {/* Show more */}
         {showShowMore && (
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px' }}>
             <button

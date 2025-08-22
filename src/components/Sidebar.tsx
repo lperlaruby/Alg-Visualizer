@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useResponsive } from '@/utils/useResponsive';
 
-// interface for the sidebar component props - defines what callbacks we need
+// Sidebar component props
 interface SidebarProps {
     onAlgorithmChange: (algorithm: string) => void;
     onArraySizeChange: (size: number) => void;
@@ -9,7 +9,7 @@ interface SidebarProps {
     isSorting: boolean;
 }
 
-// defining the algorithms i'm supporting - these are the sorting methods we can visualize
+// Available sorting algorithms
 const algorithms = [
     { id: 'bubble', name: 'Bubble Sort', description: 'Simple but slow O(n²)' },
     { id: 'selection', name: 'Selection Sort', description: 'Simple, O(n²)' },
@@ -29,10 +29,10 @@ export default function Sidebar({
     const [speed, setSpeed] = useState(50);
     const [algorithmsOpen, setAlgorithmsOpen] = useState(true);
 
-    // Get responsive utilities
+    // Responsive design
     const { isMobile } = useResponsive();
 
-    // handlers for controls - these update local state and call parent functions
+    // Control handlers
     const handleAlgorithmChange = (algorithmId: string) => {
         setSelectedAlgorithm(algorithmId);
         onAlgorithmChange(algorithmId);
@@ -48,7 +48,7 @@ export default function Sidebar({
         onSpeedChange(speed);
     };
 
-    // find the currently selected algorithm data for display
+    // Get selected algorithm data
     const selectedAlgorithmData = algorithms.find(alg => alg.id === selectedAlgorithm);
 
     return (
@@ -128,7 +128,7 @@ export default function Sidebar({
         </div>
         {/* Divider */}
         <div style={{ width: '100%', height: 1, background: '#e5e7eb', margin: '10px 0', border: 'none' }} />
-        {/* array size control section */}
+        {/* Array size */}
         <div style={{ marginBottom: 12, display: "flex", flexDirection: "column", padding: "0 10px" }}>
             <h4 style={{ marginBottom: 8, color: "#333", fontSize: "14px", fontWeight: "600" }}>Array Size</h4>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
@@ -148,7 +148,7 @@ export default function Sidebar({
         </div>
         {/* Divider */}
         <div style={{ width: '100%', height: 1, background: '#e5e7eb', margin: '10px 0', border: 'none' }} />
-        {/* animation speed control section */}
+        {/* Animation speed */}
         <div style={{ marginBottom: 12, display: "flex", flexDirection: "column", padding: "0 10px" }}>
             <h4 style={{ marginBottom: 8, color: "#333", fontSize: "14px", fontWeight: "600" }}>Animation Speed</h4>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
@@ -168,7 +168,7 @@ export default function Sidebar({
         </div>
         {/* Divider */}
         <div style={{ width: '100%', height: 1, background: '#e5e7eb', margin: '10px 0', border: 'none' }} />
-        {/* legend section - always at the bottom */}
+        {/* Legend */}
         <div style={{
             marginTop: "auto",
             background: "#f3f4f6",

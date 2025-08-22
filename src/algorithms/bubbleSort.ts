@@ -1,4 +1,4 @@
-// bubble sort algorithm - efficient implementation with delta changes
+// Bubble sort with step tracking
 import { SortingStep } from '@/types';
 
 export function reconstructArrayAtStep(initialArray: number[], steps: SortingStep[], stepIndex: number): number[] {
@@ -30,7 +30,7 @@ export function bubbleSort(array: number[]): SortingStep[] {
                 comparingIndices: [j, j + 1],
                 swappingIndices: [],
                 sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index),
-                description: `Comparing elements at positions ${j} and ${j + 1}`
+                description: `Comparing ${arr[j]} and ${arr[j + 1]}`
             });
 
             if (arr[j] > arr[j + 1]) {
@@ -51,7 +51,7 @@ export function bubbleSort(array: number[]): SortingStep[] {
                     comparingIndices: [],
                     swappingIndices: [],
                     sortedIndices: Array.from({length: i}, (_, index) => n - 1 - index),
-                    description: `Swapped elements`
+                    description: "Swapped"
                 });
             }
         }

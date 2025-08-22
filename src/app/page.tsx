@@ -1,4 +1,4 @@
-"use client" // this is a client component
+"use client"
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
@@ -29,7 +29,7 @@ export default function HomePage() {
     const [speed, setSpeed] = useState(50);
     const [isSorting, setIsSorting] = useState(false);
 
-    // Batched visualization state
+    // Track what's happening in the visualization
     const [visualizationState, setVisualizationState] = useState({
         comparingIndices: [] as number[],
         swappingIndices: [] as number[],
@@ -46,7 +46,7 @@ export default function HomePage() {
 
     const { isMobile } = useResponsive();
 
-    // Memoized current array reconstruction
+    // Rebuild array based on current step
     const currentArray = useMemo(() => {
         if (sortingSteps.length === 0) return array;
         return reconstructArrayAtStep(array, sortingSteps, currentStepIndex);
@@ -139,7 +139,7 @@ export default function HomePage() {
         generateNewArray();
     }, []);
 
-    // Batched visualization state updates
+    // Update visualization when step changes
     useEffect(() => {
         if (sortingSteps.length > 0 && currentStepIndex < sortingSteps.length) {
             const currentStep = sortingSteps[currentStepIndex];
@@ -152,7 +152,7 @@ export default function HomePage() {
         }
     }, [currentStepIndex, sortingSteps]);
 
-    // Optimized animation timing
+    // Handle animation timing
     useEffect(() => {
         if (sortingSteps.length > 0 && currentStepIndex < sortingSteps.length - 1 && isSorting && !isPaused) {
             timeoutRef.current = setTimeout(() => {
@@ -176,7 +176,7 @@ export default function HomePage() {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: '#fff', // White background to match header
+        background: '#fff',
        }}>
         <Header />
         <div style={{ 
@@ -186,19 +186,19 @@ export default function HomePage() {
           gap: isMobile ? '8px' : '12px',
           minWidth: 0,
           flexWrap: 'wrap',
-          borderTop: '1.5px solid #d1d5db', // Darker line below header
+          borderTop: '1.5px solid #d1d5db',
         }}>
-          {/* Sidebar wrapper with full-height border */}
+          {/* Sidebar */}
           <div style={{ 
             display: 'flex', 
             flexDirection: 'column',
             position: 'relative',
             minHeight: '0', 
             minWidth: '0',
-            marginTop: '-12px', // Extend to touch header border
-            paddingTop: '12px', // Compensate for the negative margin
+            marginTop: '-12px',
+            paddingTop: '12px',
           }}>
-            {/* Full-height border line */}
+            {/* Border line */}
             <div style={{
               position: 'absolute',
               top: 0,
@@ -216,7 +216,7 @@ export default function HomePage() {
                 isSorting={isSorting}
             />
           </div>
-          {/* main content area */}
+          {/* Main content */}
           <main style={{
             flex: 1,
             display: 'flex',
@@ -226,7 +226,7 @@ export default function HomePage() {
             overflow: 'hidden',
             minHeight: 'fit-content',
           }}>
-            {/* control buttons for the visualization */}
+            {/* Controls */}
             <Controls 
                 onGenerateArray={handleGenerateArray}
                 onStartSort={handleStartSort}
@@ -239,9 +239,9 @@ export default function HomePage() {
                 isPaused={isPaused}
                 displayMode={displayMode}
             />
-            {/* code display showing the current algorithm */}
+            {/* Code display */}
             <CodeDisplay selectedAlgorithm={selectedAlgorithm} displayMode={displayMode} />
-            {/* the main sorting visualization component */}
+            {/* Visualization */}
             <SortingVisualizer 
               array={currentArray}
               isSorting={isSorting}

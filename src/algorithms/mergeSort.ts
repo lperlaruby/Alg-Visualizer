@@ -1,11 +1,11 @@
-// merge sort - divide and conquer approach, very efficient
+// Merge sort with visualization steps
 import { SortingStep } from '@/types';
 
 export function mergeSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
-    const arr = [...array]; // copy to avoid mutating original
+    const arr = [...array];
     
-    // initial step - show starting state
+    // Starting state
     steps.push({
         comparingIndices: [],
         swappingIndices: [],
@@ -13,16 +13,16 @@ export function mergeSort(array: number[]): SortingStep[] {
         description: "Starting merge sort..."
     });
 
-    // merge function - combines two sorted subarrays into one sorted array
+    // Merge two sorted subarrays
     const merge = (left: number, mid: number, right: number) => {
-        const tempArray = new Array(right - left + 1); // temporary array to hold merged result
-        let i = left; // index for left subarray
-        let j = mid + 1; // index for right subarray
-        let k = 0; // index for temp array
+        const tempArray = new Array(right - left + 1);
+        let i = left;
+        let j = mid + 1;
+        let k = 0;
 
-        // merge the two subarrays by comparing elements
+        // Compare and merge
         while (i <= mid && j <= right) {
-            // show comparison - highlight what we're comparing
+            // Show comparison
             steps.push({
                 comparingIndices: [i, j],
                 swappingIndices: [],
@@ -30,7 +30,7 @@ export function mergeSort(array: number[]): SortingStep[] {
                 description: `Comparing ${arr[i]} with ${arr[j]}`
             });
 
-            // take the smaller element from either subarray
+            // Take smaller element
             if (arr[i] <= arr[j]) {
                 tempArray[k] = arr[i];
                 i++;
@@ -41,14 +41,14 @@ export function mergeSort(array: number[]): SortingStep[] {
             k++;
         }
 
-        // copy remaining elements from left subarray if any
+        // Copy remaining left elements
         while (i <= mid) {
             tempArray[k] = arr[i];
             i++;
             k++;
         }
 
-        // copy remaining elements from right subarray if any
+        // Copy remaining right elements
         while (j <= right) {
             tempArray[k] = arr[j];
             j++;
@@ -61,7 +61,7 @@ export function mergeSort(array: number[]): SortingStep[] {
             arrayChanges.push({ index: left + idx, value: tempArray[idx] });
         }
 
-        // show merged result - display the sorted subarray
+        // Show merged result
         steps.push({
             arrayChanges,
             comparingIndices: [],
@@ -71,12 +71,12 @@ export function mergeSort(array: number[]): SortingStep[] {
         });
     };
 
-    // recursive helper function - this does the divide and conquer
+    // Recursive divide and conquer
     const mergeSortHelper = (left: number, right: number) => {
         if (left < right) {
-            const mid = Math.floor((left + right) / 2); // find middle point
+            const mid = Math.floor((left + right) / 2);
             
-            // show division - highlight how we're splitting the array
+            // Show division
             steps.push({
                 comparingIndices: [],
                 swappingIndices: [],
@@ -84,15 +84,15 @@ export function mergeSort(array: number[]): SortingStep[] {
                 description: `Dividing array from ${left} to ${right} at ${mid}`
             });
             
-            mergeSortHelper(left, mid); // sort left half
-            mergeSortHelper(mid + 1, right); // sort right half
-            merge(left, mid, right); // merge the two sorted halves
+            mergeSortHelper(left, mid);
+            mergeSortHelper(mid + 1, right);
+            merge(left, mid, right);
         }
     };
 
-    mergeSortHelper(0, arr.length - 1); // start the recursive process
+    mergeSortHelper(0, arr.length - 1);
 
-    // final step - we're all done!
+    // Done!
     steps.push({
         comparingIndices: [],
         swappingIndices: [],

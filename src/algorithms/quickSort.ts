@@ -1,11 +1,11 @@
-// quick sort - pick a pivot and partition around it, very fast in practice
+// Quick sort with visualization
 import { SortingStep } from '@/types';
 
 export function quickSort(array: number[]): SortingStep[] {
     const steps: SortingStep[] = [];
-    const arr = [...array]; // copy to avoid mutating original
+    const arr = [...array];
     
-    // initial step - show starting state
+    // Starting state
     steps.push({
         comparingIndices: [],
         swappingIndices: [],
@@ -13,12 +13,12 @@ export function quickSort(array: number[]): SortingStep[] {
         description: "Starting quick sort..."
     });
 
-    // partition function - puts pivot in right place and returns its position
+    // Partition around pivot
     const partition = (low: number, high: number): number => {
-        const pivot = arr[high]; // pick the last element as pivot
-        let i = low - 1; // index for elements smaller than pivot
+        const pivot = arr[high];
+        let i = low - 1;
 
-        // show pivot selection - highlight what we chose as pivot
+        // Show pivot
         steps.push({
             comparingIndices: [high],
             swappingIndices: [],
@@ -26,9 +26,9 @@ export function quickSort(array: number[]): SortingStep[] {
             description: `Selected pivot: ${pivot} at position ${high}`
         });
 
-        // go through all elements and put smaller ones to the left
+        // Partition elements
         for (let j = low; j < high; j++) {
-            // show comparison with pivot - highlight what we're comparing
+            // Compare with pivot
             steps.push({
                 comparingIndices: [j, high],
                 swappingIndices: [],
@@ -36,12 +36,12 @@ export function quickSort(array: number[]): SortingStep[] {
                 description: `Comparing ${arr[j]} with pivot ${pivot}`
             });
 
-            // if current element is smaller than pivot, swap it to left side
+            // Move smaller elements left
             if (arr[j] < pivot) {
-                i++; // move the boundary for smaller elements
+                i++;
                 
                 if (i !== j) {
-                    // show swap - highlight the swapping operation
+                    // Show swap
                     steps.push({
                         comparingIndices: [],
                         swappingIndices: [i, j],
@@ -49,9 +49,9 @@ export function quickSort(array: number[]): SortingStep[] {
                         description: `Swapping ${arr[i]} and ${arr[j]}`
                     });
 
-                    [arr[i], arr[j]] = [arr[j], arr[i]]; // do the swap
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
 
-                    // show result after swap - display the new state
+                    // After swap
                     steps.push({
                         arrayChanges: [
                             { index: i, value: arr[i] },
@@ -60,13 +60,13 @@ export function quickSort(array: number[]): SortingStep[] {
                         comparingIndices: [],
                         swappingIndices: [],
                         sortedIndices: [],
-                        description: `Swapped elements`
+                        description: "Swapped"
                     });
                 }
             }
         }
 
-        // place pivot in correct position - put it after all smaller elements
+        // Place pivot in final position
         if (i + 1 !== high) {
             steps.push({
                 comparingIndices: [],
@@ -75,7 +75,7 @@ export function quickSort(array: number[]): SortingStep[] {
                 description: `Placing pivot ${pivot} in final position`
             });
 
-            [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]; // swap pivot to its final spot
+            [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
 
             steps.push({
                 arrayChanges: [
@@ -88,7 +88,7 @@ export function quickSort(array: number[]): SortingStep[] {
                 description: `Pivot ${pivot} is now in correct position`
             });
         } else {
-            // pivot was already in the right place
+            // Pivot already in place
             steps.push({
                 comparingIndices: [],
                 swappingIndices: [],
@@ -97,13 +97,13 @@ export function quickSort(array: number[]): SortingStep[] {
             });
         }
 
-        return i + 1; // return the pivot's final position
+        return i + 1;
     };
 
-    // recursive helper function - this does the divide and conquer
+    // Recursive helper
     const quickSortHelper = (low: number, high: number) => {
         if (low < high) {
-            // show partition range - highlight what section we're working on
+            // Show partition range
             steps.push({
                 comparingIndices: [],
                 swappingIndices: [],
@@ -111,17 +111,17 @@ export function quickSort(array: number[]): SortingStep[] {
                 description: `Partitioning subarray from ${low} to ${high}`
             });
 
-            const pi = partition(low, high); // get pivot position
+            const pi = partition(low, high);
             
-            // recursively sort left and right parts - pivot is already in place
-            quickSortHelper(low, pi - 1); // sort left side of pivot
-            quickSortHelper(pi + 1, high); // sort right side of pivot
+            // Sort left and right
+            quickSortHelper(low, pi - 1);
+            quickSortHelper(pi + 1, high);
         }
     };
 
-    quickSortHelper(0, arr.length - 1); // start the recursive process
+    quickSortHelper(0, arr.length - 1);
 
-    // final step - we're all done!
+    // Done!
     steps.push({
         comparingIndices: [],
         swappingIndices: [],

@@ -1,4 +1,4 @@
-// Algorithm explanations for display in the CodeDisplay component
+// Algorithm explanations
 
 export const getAlgorithmExplanation = (selectedAlgorithm: string): string => {
   switch (selectedAlgorithm) {
