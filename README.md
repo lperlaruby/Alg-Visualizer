@@ -11,7 +11,7 @@ A simple web app that shows how different sorting algorithms work. Watch the bar
 
 ## Live site
 
-**[View it here](https://your-deployment-url.vercel.app)**
+**[View it here](https://algorithm-visualizer-eight-ochre.vercel.app/)**
 
 ## Run locally
 
